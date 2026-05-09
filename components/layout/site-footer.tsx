@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { siteAssets } from "@/lib/assets";
 
@@ -25,25 +26,23 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-3 text-sm font-semibold">Plataforma</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Planes</li>
-            <li>Como funciona</li>
-            <li>Menus</li>
-            <li>Preguntas frecuentes</li>
+            <li><Link href="/planes" className="transition-smooth hover:text-foreground">Planes</Link></li>
+            <li><Link href="/como-funciona" className="transition-smooth hover:text-foreground">Cómo funciona</Link></li>
+            <li><Link href="/menu-semanal" className="transition-smooth hover:text-foreground">Menú semanal</Link></li>
+            <li><Link href="/testimonios" className="transition-smooth hover:text-foreground">Testimonios</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="mb-3 text-sm font-semibold">Empresa</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Sobre nosotros</li>
-            <li>Dark kitchens</li>
-            <li>Trabaja con BOCAO</li>
-            <li>Contacto</li>
+            <li><Link href="/sobre-nosotros" className="transition-smooth hover:text-foreground">Sobre nosotros</Link></li>
+            <li><Link href="/contacto" className="transition-smooth hover:text-foreground">Contacto</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="mb-3 text-sm font-semibold">Legal</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Terminos</li>
+            <li>Términos</li>
             <li>Privacidad</li>
             <li>Cookies</li>
           </ul>
