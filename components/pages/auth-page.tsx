@@ -100,10 +100,6 @@ export default function AuthPage() {
             <p className="text-sm text-muted-foreground">Accede o crea tu cuenta para empezar</p>
           </div>
 
-          <div className="mb-5 rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm text-muted-foreground">
-            Tu acceso se detecta segun tu cuenta. Las cuentas corporativas de administracion y cocina entran automaticamente a su panel.
-          </div>
-
           <div className="grid w-full grid-cols-2 rounded-md bg-muted p-1">
             <button
               className={cn(
