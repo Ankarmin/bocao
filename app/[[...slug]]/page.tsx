@@ -8,13 +8,18 @@ import { AdminIncidentsPage, AdminLogisticsPage, AdminUsersPage } from "@/compon
 import AuthPage from "@/components/pages/auth-page";
 import CheckoutPage from "@/components/pages/checkout-page";
 import CocinaPage from "@/components/pages/cocina-page";
+import ComoFuncionaPage from "@/components/pages/como-funciona-page";
 import ConfigurarPage from "@/components/pages/configurar-page";
 import ConfirmacionPage from "@/components/pages/confirmacion-page";
+import ContactoPage from "@/components/pages/contacto-page";
 import DashboardPage from "@/components/pages/dashboard-page";
 import HomePage from "@/components/pages/home-page";
 import { KitchenLabelingPage, KitchenLotsPage, KitchenProductionPage } from "@/components/pages/kitchen-section-pages";
+import MenuSemanalPage from "@/components/pages/menu-semanal-page";
 import PlanesPage from "@/components/pages/planes-page";
 import ResumenPage from "@/components/pages/resumen-page";
+import SobreNosotrosPage from "@/components/pages/sobre-nosotros-page";
+import TestimoniosPage from "@/components/pages/testimonios-page";
 
 type CatchAllPageProps = {
   params: Promise<{ slug?: string[] }>;
@@ -30,8 +35,18 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
   switch (path) {
     case "":
       return <HomePage />;
+    case "sobre-nosotros":
+      return <SobreNosotrosPage />;
+    case "como-funciona":
+      return <ComoFuncionaPage />;
+    case "menu-semanal":
+      return <MenuSemanalPage />;
     case "planes":
       return <PlanesPage />;
+    case "testimonios":
+      return <TestimoniosPage />;
+    case "contacto":
+      return <ContactoPage />;
     case "auth":
       return <AuthPage />;
     case "configurar":
