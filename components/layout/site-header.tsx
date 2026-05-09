@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Inicio" },
-  { href: "/#beneficios", label: "Beneficios" },
-  { href: "/#como-funciona", label: "Como funciona" },
-  { href: "/#menu-semanal", label: "Menu" },
-  { href: "/#planes", label: "Planes" },
-  { href: "/#testimonios", label: "Testimonios" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/sobre-nosotros", label: "Sobre nosotros" },
+  { href: "/como-funciona", label: "Cómo funciona" },
+  { href: "/menu-semanal", label: "Menú" },
+  { href: "/planes", label: "Planes" },
+  { href: "/testimonios", label: "Testimonios" },
+  { href: "/contacto", label: "Contacto" },
 ];
 
 function AccountAvatar({ name }: { name: string }) {
@@ -76,8 +76,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
-            const isAnchor = link.href.includes("#");
-            const active = !isAnchor && pathname === link.href;
+            const active = pathname === link.href;
 
             return (
               <Link
