@@ -14,7 +14,13 @@ import { cn } from "@/lib/utils";
 export default function ResumenPage() {
   const searchParams = useSearchParams();
   const planId = searchParams.get("plan") ?? "estandar";
-  const plan = PLANS.find((item) => item.id === planId) ?? PLANS[1];
+  const fallbackPlan = PLANS[1] ?? PLANS[0];
+
+  if (!fallbackPlan) {
+    return null;
+  }
+
+  const plan = PLANS.find((item) => item.id === planId) ?? fallbackPlan;
   const delivery = plan.price * 0.05;
   const total = plan.price + delivery;
 

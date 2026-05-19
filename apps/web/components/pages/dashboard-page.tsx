@@ -67,15 +67,23 @@ export default function DashboardPage() {
             <h2 className="font-display text-xl font-bold">Menu semanal</h2>
           </div>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-7">
-            {days.map((day, index) => (
-              <div key={day} className="rounded-xl border border-border bg-secondary/50 p-4">
-                <div className="text-xs font-semibold uppercase text-muted-foreground">{day}</div>
-                <div className="mt-2 text-sm font-medium leading-snug">{menu[index].meal}</div>
-                <div className="mt-3 inline-flex rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
-                  {menu[index].kcal} kcal
+            {days.map((day, index) => {
+              const menuItem = menu[index];
+
+              if (!menuItem) {
+                return null;
+              }
+
+              return (
+                <div key={day} className="rounded-xl border border-border bg-secondary/50 p-4">
+                  <div className="text-xs font-semibold uppercase text-muted-foreground">{day}</div>
+                  <div className="mt-2 text-sm font-medium leading-snug">{menuItem.meal}</div>
+                  <div className="mt-3 inline-flex rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
+                    {menuItem.kcal} kcal
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       </section>

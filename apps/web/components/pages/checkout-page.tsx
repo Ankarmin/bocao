@@ -14,7 +14,13 @@ import { cn } from "@/lib/utils";
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams();
-  const plan = PLANS.find((item) => item.id === searchParams.get("plan")) ?? PLANS[1];
+  const fallbackPlan = PLANS[1] ?? PLANS[0];
+
+  if (!fallbackPlan) {
+    return null;
+  }
+
+  const plan = PLANS.find((item) => item.id === searchParams.get("plan")) ?? fallbackPlan;
   const total = plan.price * 1.05;
 
   return (
