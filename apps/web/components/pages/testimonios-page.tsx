@@ -11,8 +11,7 @@ import {
   Users,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -103,16 +102,14 @@ export default function TestimoniosPage() {
   const visibleTestimonials = showAll ? testimonials : testimonials.slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
         <div className="absolute -right-40 top-20 -z-10 h-[500px] w-[500px] rounded-full bg-primary/8 blur-3xl" />
 
         <div className="container py-20 md:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3 w-3" /> Historias reales
             </span>
@@ -129,12 +126,12 @@ export default function TestimoniosPage() {
 
       {/* Stats */}
       <section className="border-y border-border/60 bg-secondary/30">
-        <div className="container grid grid-cols-3 gap-6 py-12">
+        <div data-scroll-reveal-stagger className="container grid grid-cols-3 gap-6 py-12">
           {impactStats.map((stat) => {
             const Icon = stat.icon;
 
             return (
-              <div key={stat.label} className="text-center">
+              <div key={stat.label} data-scroll-reveal="soft" className="text-center">
                 <div className="mx-auto mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
@@ -150,7 +147,7 @@ export default function TestimoniosPage() {
 
       {/* Testimonials grid */}
       <section className="container py-20">
-        <div className="mb-12 max-w-2xl">
+        <div data-scroll-reveal="soft" className="mb-12 max-w-2xl">
           <h2 className="font-display text-3xl font-bold md:text-4xl">
             Voces de la comunidad BOCAO
           </h2>
@@ -159,10 +156,11 @@ export default function TestimoniosPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div data-scroll-reveal-stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visibleTestimonials.map((item) => (
             <Card
               key={item.name}
+              data-scroll-reveal="soft"
               className="group flex flex-col p-7 shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant"
             >
               <Quote className="h-8 w-8 text-primary/30" />
@@ -196,7 +194,7 @@ export default function TestimoniosPage() {
         </div>
 
         {!showAll && testimonials.length > 6 && (
-          <div className="mt-10 text-center">
+          <div data-scroll-reveal="soft" className="mt-10 text-center">
             <button
               className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full")}
               onClick={() => setShowAll(true)}
@@ -210,7 +208,10 @@ export default function TestimoniosPage() {
 
       {/* CTA */}
       <section className="container pb-20">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+        <div
+          data-scroll-reveal="hero"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+        >
           <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
           <div className="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
             <div>
@@ -234,7 +235,6 @@ export default function TestimoniosPage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }

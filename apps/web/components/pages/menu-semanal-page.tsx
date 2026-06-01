@@ -14,8 +14,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -87,16 +86,14 @@ const categories = [
 
 export default function MenuSemanalPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
         <div className="absolute -left-32 top-10 -z-10 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
 
         <div className="container py-20 md:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3 py-1 text-xs font-semibold text-accent">
               <UtensilsCrossed className="h-3 w-3" /> Menú rotativo
             </span>
@@ -113,12 +110,12 @@ export default function MenuSemanalPage() {
 
       {/* Categories */}
       <section className="border-y border-border/60 bg-secondary/30">
-        <div className="container grid grid-cols-2 gap-4 py-10 md:grid-cols-4">
+        <div data-scroll-reveal-stagger className="container grid grid-cols-2 gap-4 py-10 md:grid-cols-4">
           {categories.map((cat) => {
             const Icon = cat.icon;
 
             return (
-              <div key={cat.title} className="text-center">
+              <div key={cat.title} data-scroll-reveal="soft" className="text-center">
                 <div className={cn("mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl", cat.color)}>
                   <Icon className="h-6 w-6" />
                 </div>
@@ -132,16 +129,16 @@ export default function MenuSemanalPage() {
 
       {/* Weekly menu */}
       <section className="container py-20">
-        <div className="mb-12 max-w-2xl">
+        <div data-scroll-reveal="soft" className="mb-12 max-w-2xl">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Menú de la semana</h2>
           <p className="mt-3 text-muted-foreground">
             Cada semana renovamos las opciones. Aquí tienes un ejemplo de lo que podrías recibir.
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div data-scroll-reveal-stagger className="space-y-6">
           {weekMenu.map((dayMenu) => (
-            <Card key={dayMenu.day} className="overflow-hidden border-border/70 p-0 shadow-soft">
+            <Card key={dayMenu.day} data-scroll-reveal="soft" className="overflow-hidden border-border/70 p-0 shadow-soft">
               <div className="bg-gradient-hero p-5 text-primary-foreground">
                 <h3 className="font-display text-xl font-bold">{dayMenu.day}</h3>
               </div>
@@ -185,7 +182,7 @@ export default function MenuSemanalPage() {
       {/* Info banner */}
       <section className="bg-secondary/40 py-16">
         <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
+          <div data-scroll-reveal="soft" className="mx-auto max-w-2xl text-center">
             <Sparkles className="mx-auto mb-4 h-8 w-8 text-primary" />
             <h2 className="font-display text-2xl font-bold md:text-3xl">
               El menú rota cada semana
@@ -199,7 +196,10 @@ export default function MenuSemanalPage() {
 
       {/* CTA */}
       <section className="container py-20">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+        <div
+          data-scroll-reveal="hero"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+        >
           <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
           <div className="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
             <div>
@@ -223,7 +223,6 @@ export default function MenuSemanalPage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }

@@ -13,8 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -92,9 +91,7 @@ export default function ContactoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
@@ -102,7 +99,7 @@ export default function ContactoPage() {
         <div className="absolute -right-32 bottom-0 -z-10 h-96 w-96 rounded-full bg-primary/8 blur-3xl" />
 
         <div className="container py-20 md:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
               <MessageCircle className="h-3 w-3" /> Conversemos
             </span>
@@ -119,12 +116,12 @@ export default function ContactoPage() {
 
       {/* Contact methods */}
       <section className="border-y border-border/60 bg-secondary/30">
-        <div className="container grid grid-cols-2 gap-4 py-10 md:grid-cols-4">
+        <div data-scroll-reveal-stagger className="container grid grid-cols-2 gap-4 py-10 md:grid-cols-4">
           {contactMethods.map((method) => {
             const Icon = method.icon;
 
             return (
-              <div key={method.title} className="text-center">
+              <div key={method.title} data-scroll-reveal="soft" className="text-center">
                 <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Icon className="h-6 w-6" />
                 </div>
@@ -139,9 +136,9 @@ export default function ContactoPage() {
 
       {/* Form + FAQ */}
       <section className="container py-20">
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div data-scroll-reveal-stagger className="grid gap-12 lg:grid-cols-2">
           {/* Contact form */}
-          <div>
+          <div data-scroll-reveal="soft">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Envíanos un mensaje</h2>
             <p className="mt-3 text-muted-foreground">
               Completa el formulario y te responderemos en menos de 24 horas.
@@ -226,7 +223,7 @@ export default function ContactoPage() {
           </div>
 
           {/* FAQ */}
-          <div>
+          <div data-scroll-reveal="soft">
             <div className="mb-8 flex items-center gap-3">
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <HelpCircle className="h-5 w-5" />
@@ -272,7 +269,10 @@ export default function ContactoPage() {
       {/* Map-like banner */}
       <section className="bg-secondary/40 py-16">
         <div className="container">
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+          <div
+            data-scroll-reveal="hero"
+            className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+          >
             <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -left-20 bottom-0 h-40 w-40 rounded-full bg-white/5 blur-xl" />
             <div className="relative text-center">
@@ -288,7 +288,6 @@ export default function ContactoPage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }
