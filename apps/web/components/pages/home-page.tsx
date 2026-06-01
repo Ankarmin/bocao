@@ -17,8 +17,7 @@ import {
   Truck,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { PlansGrid } from "@/components/plans/plan-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { buttonVariants } from "@/components/ui/button";
@@ -87,17 +86,15 @@ export default function HomePage() {
   }, [isHydrated, session, signOut]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
         <div className="absolute -right-32 top-10 -z-10 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -left-32 bottom-0 -z-10 h-96 w-96 rounded-full bg-accent/15 blur-3xl" />
 
-        <div className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-24">
-          <div className="animate-fade-in-up space-y-6">
+        <div data-scroll-reveal-stagger className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-24">
+          <div data-scroll-reveal="hero" className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3 w-3" /> Suscripción de comida saludable
             </span>
@@ -130,7 +127,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative">
+          <div data-scroll-reveal="hero" className="relative">
             <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-hero opacity-20 blur-2xl" />
             <Image
               src={siteAssets.heroMeals}
@@ -147,19 +144,20 @@ export default function HomePage() {
 
       {/* Benefits (condensed) */}
       <section className="container py-20">
-        <div className="mb-12 max-w-2xl">
+        <div data-scroll-reveal="soft" className="mb-12 max-w-2xl">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Nutrición real, sin complicaciones</h2>
           <p className="mt-3 text-muted-foreground">
             Olvídate de planificar, comprar y cocinar. Nosotros lo hacemos por ti.
           </p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div data-scroll-reveal-stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {benefits.map((benefit) => {
             const Icon = benefit.icon;
 
             return (
               <Card
                 key={benefit.title}
+                data-scroll-reveal="soft"
                 className="group border-border/70 p-6 shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant"
               >
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-smooth group-hover:bg-gradient-fresh group-hover:text-accent-foreground">
@@ -171,7 +169,7 @@ export default function HomePage() {
             );
           })}
         </div>
-        <div className="mt-8 text-center">
+        <div data-scroll-reveal="soft" className="mt-8 text-center">
           <Link href="/sobre-nosotros" className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>
             Conoce más sobre BOCAO <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
@@ -181,16 +179,16 @@ export default function HomePage() {
       {/* How it works (condensed) */}
       <section className="bg-secondary/40 py-20">
         <div className="container">
-          <div className="mx-auto mb-12 max-w-2xl text-center">
+          <div data-scroll-reveal="soft" className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Cómo funciona</h2>
             <p className="mt-3 text-muted-foreground">En 3 pasos tendrás tu primera entrega semanal de BOCAO.</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div data-scroll-reveal-stagger className="grid gap-6 md:grid-cols-3">
             {steps.map((step, index) => {
               const Icon = step.icon;
 
               return (
-                <Card key={step.title} className="relative overflow-hidden p-7 shadow-soft">
+                <Card key={step.title} data-scroll-reveal="soft" className="relative overflow-hidden p-7 shadow-soft">
                   <div className="absolute right-5 top-4 font-display text-7xl font-extrabold text-primary/10">{index + 1}</div>
                   <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-hero text-primary-foreground">
                     <Icon className="h-6 w-6" />
@@ -201,7 +199,7 @@ export default function HomePage() {
               );
             })}
           </div>
-          <div className="mt-8 text-center">
+          <div data-scroll-reveal="soft" className="mt-8 text-center">
             <Link href="/como-funciona" className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>
               Ver proceso completo <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -211,7 +209,7 @@ export default function HomePage() {
 
       {/* Plans preview */}
       <section className="container py-20">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
+        <div data-scroll-reveal="soft" className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Elige el plan ideal para ti</h2>
           <p className="mt-3 text-muted-foreground">Cambia o cancela tu plan cuando quieras. Sin contratos.</p>
         </div>
@@ -221,15 +219,15 @@ export default function HomePage() {
       {/* Testimonials preview */}
       <section className="bg-secondary/40 py-20">
         <div className="container">
-          <div className="mb-12 max-w-2xl">
+          <div data-scroll-reveal="soft" className="mb-12 max-w-2xl">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Lo que dicen nuestros suscriptores</h2>
             <p className="mt-3 text-muted-foreground">
               Historias de personas que usan BOCAO para recuperar tiempo y constancia.
             </p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div data-scroll-reveal-stagger className="grid gap-6 lg:grid-cols-3">
             {testimonials.map((item) => (
-              <Card key={item.name} className="p-7 shadow-soft">
+              <Card key={item.name} data-scroll-reveal="soft" className="p-7 shadow-soft">
                 <Quote className="h-8 w-8 text-primary/30" />
                 <p className="mt-4 text-base leading-7 text-foreground/85">&ldquo;{item.quote}&rdquo;</p>
                 <div className="mt-6 border-t border-border pt-4">
@@ -246,9 +244,9 @@ export default function HomePage() {
                   </div>
                 </div>
               </Card>
-            ))}
+              ))}
           </div>
-          <div className="mt-8 text-center">
+          <div data-scroll-reveal="soft" className="mt-8 text-center">
             <Link href="/testimonios" className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>
               Ver más testimonios <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -258,7 +256,10 @@ export default function HomePage() {
 
       {/* CTA Banner */}
       <section className="container py-20">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+        <div
+          data-scroll-reveal="hero"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+        >
           <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
           <div className="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
             <div>
@@ -277,7 +278,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }
