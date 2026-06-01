@@ -93,13 +93,15 @@ export default function ScrollRevealController({ scopeId }: ScrollRevealControll
     };
 
     const observeElements = () => {
-      if (!intersectionObserver) {
+      const observer = intersectionObserver;
+
+      if (!observer) {
         return;
       }
 
       getRevealElements().forEach((element) => {
         if (!element.classList.contains(VISIBLE_CLASS)) {
-          intersectionObserver.observe(element);
+          observer.observe(element);
         }
       });
     };
