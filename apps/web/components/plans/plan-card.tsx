@@ -12,6 +12,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
 
   return (
     <Card
+      data-scroll-reveal="soft"
       className={cn(
         "relative flex flex-col gap-6 overflow-hidden p-7 transition-smooth hover:-translate-y-1",
         highlight ? "border-primary/40 shadow-elegant ring-1 ring-primary/20" : "border-border shadow-soft",
@@ -62,7 +63,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
 
 export function PlansGrid() {
   return (
-    <div className="grid gap-6 md:grid-cols-3">
+    <div data-scroll-reveal-stagger className="grid gap-6 md:grid-cols-3">
       {PLANS.map((plan) => (
         <PlanCard key={plan.id} plan={plan} />
       ))}
