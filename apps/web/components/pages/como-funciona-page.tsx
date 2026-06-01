@@ -14,8 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -92,16 +91,14 @@ const features = [
 
 export default function ComoFuncionaPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
         <div className="absolute -right-32 top-10 -z-10 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
         <div className="container py-20 md:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3 w-3" /> Proceso simple
             </span>
@@ -118,7 +115,7 @@ export default function ComoFuncionaPage() {
 
       {/* Steps */}
       <section className="container py-20">
-        <div className="space-y-8">
+        <div data-scroll-reveal-stagger className="space-y-8">
           {mainSteps.map((item, index) => {
             const Icon = item.icon;
             const isEven = index % 2 === 0;
@@ -126,6 +123,7 @@ export default function ComoFuncionaPage() {
             return (
               <div
                 key={item.step}
+                data-scroll-reveal="soft"
                 className={cn(
                   "grid items-center gap-8 md:grid-cols-2",
                   !isEven && "md:[direction:rtl]",
@@ -164,7 +162,7 @@ export default function ComoFuncionaPage() {
       {/* Extra features */}
       <section className="bg-secondary/40 py-20">
         <div className="container">
-          <div className="mx-auto mb-12 max-w-2xl text-center">
+          <div data-scroll-reveal="soft" className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">
               Más que un servicio de comida
             </h2>
@@ -172,13 +170,14 @@ export default function ComoFuncionaPage() {
               Cada detalle está pensado para que tu experiencia sea fluida de principio a fin.
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div data-scroll-reveal-stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => {
               const Icon = feature.icon;
 
               return (
                 <Card
                   key={feature.title}
+                  data-scroll-reveal="soft"
                   className="group border-border/70 p-6 shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant"
                 >
                   <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-smooth group-hover:bg-gradient-hero group-hover:text-primary-foreground">
@@ -195,7 +194,10 @@ export default function ComoFuncionaPage() {
 
       {/* CTA */}
       <section className="container py-20">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+        <div
+          data-scroll-reveal="hero"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+        >
           <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
           <div className="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
             <div>
@@ -219,7 +221,6 @@ export default function ComoFuncionaPage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }

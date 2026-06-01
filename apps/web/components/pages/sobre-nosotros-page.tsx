@@ -16,8 +16,7 @@ import {
   Utensils,
 } from "lucide-react";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -81,9 +80,7 @@ const teamStats = [
 
 export default function SobreNosotrosPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <PublicPageShell>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-soft" />
@@ -91,7 +88,7 @@ export default function SobreNosotrosPage() {
         <div className="absolute -left-40 bottom-0 -z-10 h-[400px] w-[400px] rounded-full bg-accent/10 blur-3xl" />
 
         <div className="container py-20 md:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3 w-3" /> Nuestra historia
             </span>
@@ -108,9 +105,9 @@ export default function SobreNosotrosPage() {
 
       {/* Stats */}
       <section className="border-y border-border/60 bg-secondary/30">
-        <div className="container grid grid-cols-2 gap-6 py-12 md:grid-cols-4">
+        <div data-scroll-reveal-stagger className="container grid grid-cols-2 gap-6 py-12 md:grid-cols-4">
           {teamStats.map((stat) => (
-            <div key={stat.label} className="text-center">
+            <div key={stat.label} data-scroll-reveal="soft" className="text-center">
               <div className="font-display text-3xl font-extrabold text-primary md:text-4xl">
                 {stat.value}
               </div>
@@ -122,19 +119,20 @@ export default function SobreNosotrosPage() {
 
       {/* Values */}
       <section className="container py-20">
-        <div className="mb-12 max-w-2xl">
+        <div data-scroll-reveal="soft" className="mb-12 max-w-2xl">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Lo que nos mueve</h2>
           <p className="mt-3 text-muted-foreground">
             Cada decisión en BOCAO parte de estos principios. Son nuestra brújula para diseñar menús, operar cocinas y entregar comidas.
           </p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div data-scroll-reveal-stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {values.map((value) => {
             const Icon = value.icon;
 
             return (
               <Card
                 key={value.title}
+                data-scroll-reveal="soft"
                 className="group border-border/70 p-6 shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant"
               >
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-smooth group-hover:bg-gradient-fresh group-hover:text-accent-foreground">
@@ -151,7 +149,7 @@ export default function SobreNosotrosPage() {
       {/* Timeline */}
       <section className="bg-secondary/40 py-20">
         <div className="container">
-          <div className="mx-auto mb-12 max-w-2xl text-center">
+          <div data-scroll-reveal="soft" className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Nuestro camino</h2>
             <p className="mt-3 text-muted-foreground">
               Desde la primera receta hasta una operación de escala. Así hemos construido BOCAO.
@@ -161,7 +159,7 @@ export default function SobreNosotrosPage() {
             {/* Vertical line */}
             <div className="absolute left-6 top-0 h-full w-px bg-border md:left-1/2 md:-translate-x-px" />
 
-            <div className="space-y-10">
+            <div data-scroll-reveal-stagger className="space-y-10">
               {milestones.map((milestone, index) => {
                 const Icon = milestone.icon;
                 const isEven = index % 2 === 0;
@@ -169,6 +167,7 @@ export default function SobreNosotrosPage() {
                 return (
                   <div
                     key={milestone.year}
+                    data-scroll-reveal="soft"
                     className={cn(
                       "relative grid items-center gap-6 md:grid-cols-2",
                       isEven ? "md:text-right" : "md:direction-ltr",
@@ -204,7 +203,10 @@ export default function SobreNosotrosPage() {
 
       {/* Team */}
       <section className="container py-20">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16">
+        <div
+          data-scroll-reveal="hero"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-10 text-primary-foreground shadow-elegant md:p-16"
+        >
           <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10 blur-2xl" />
           <div className="absolute -left-20 bottom-0 h-40 w-40 rounded-full bg-white/5 blur-xl" />
           <div className="relative grid items-center gap-8 md:grid-cols-[1fr_auto]">
@@ -245,7 +247,6 @@ export default function SobreNosotrosPage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </div>
+    </PublicPageShell>
   );
 }
