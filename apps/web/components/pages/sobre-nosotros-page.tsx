@@ -10,7 +10,6 @@ import {
   Lightbulb,
   Rocket,
   ShieldCheck,
-  Sparkles,
   Target,
   Users,
   Utensils,
@@ -89,9 +88,6 @@ export default function SobreNosotrosPage() {
 
         <div className="container py-20 md:py-28">
           <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="h-3 w-3" /> Nuestra historia
-            </span>
             <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight md:text-5xl lg:text-6xl">
               Comida que cuida,
               <span className="block text-primary">operación que escala.</span>
