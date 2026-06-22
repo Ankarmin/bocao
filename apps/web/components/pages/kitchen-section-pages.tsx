@@ -1,5 +1,8 @@
+"use client";
+
 import type { ComponentType } from "react";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -16,6 +19,7 @@ import {
   User,
   Users,
   Utensils,
+  X,
 } from "lucide-react";
 
 import { RoleWorkspace } from "@/components/layout/role-workspace";
@@ -23,6 +27,7 @@ import type { SidebarLink } from "@/components/layout/role-sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
@@ -87,8 +92,8 @@ const productionOrders = [
   {
     id: "#BOCAO-001",
     customer: "Juan Perez",
-    address: "Av. Pardo 456, Miraflores",
-    profile: { calories: 1800, protein: 90, carbs: 225, fats: 60, restrictions: ["Vegetariano", "Sin lactosa"], allergies: "Nueces" },
+    address: "Av. Pardo 456, Dpto 301, Miraflores",
+    profile: { calories: 2100, protein: 140, carbs: 210, fats: 70, restrictions: ["Sin lactosa"], allergies: "Ninguna" },
     meals: [
       {
         name: "Desayuno",
@@ -100,7 +105,7 @@ const productionOrders = [
           { item: "Fresas", quantity: "50g" },
         ],
         calories: 350,
-        notes: "Sin nueces por alergia.",
+        notes: "Sin lacteos por restriccion.",
       },
       {
         name: "Almuerzo",
@@ -118,7 +123,7 @@ const productionOrders = [
   },
   {
     id: "#BOCAO-002",
-    customer: "Maria Gonzalez",
+    customer: "Carlos Garcia",
     address: "Calle Los Pinos 789, San Isidro",
     profile: { calories: 2000, protein: 110, carbs: 200, fats: 70, restrictions: ["Alto en proteina"], allergies: "Ninguna" },
     meals: [
@@ -154,6 +159,7 @@ const labelingRoutes = [
   { id: "RUTA-001", zone: "San Isidro / Miraflores", orders: 24, batch: "LOTE-001", status: "ready" },
   { id: "RUTA-002", zone: "Surco / La Molina", orders: 28, batch: "LOTE-002", status: "printing" },
   { id: "RUTA-003", zone: "Barranco / Chorrillos", orders: 19, batch: "LOTE-003", status: "pending" },
+  { id: "RUTA-004", zone: "Jesus Maria / Lince", orders: 22, batch: "LOTE-004", status: "pending" },
 ];
 
 const sampleLabels = [
@@ -166,14 +172,14 @@ const sampleLabels = [
     sequence: "001/024",
     deliveryTime: "6:00 - 8:00 AM",
     meals: ["Desayuno", "Almuerzo", "Merienda", "Cena"],
-    restrictions: ["Vegetariano", "Sin lactosa"],
-    allergies: "Nueces",
+    restrictions: ["Sin lactosa"],
+    allergies: "Ninguna",
   },
   {
     orderId: "#BOCAO-002",
-    customer: "Maria Gonzalez",
+    customer: "Carlos Garcia",
     address: "Calle Los Pinos 789, San Isidro",
-    phone: "+51 999 777 666",
+    phone: "+51 999 666 555",
     route: "RUTA-001",
     sequence: "002/024",
     deliveryTime: "6:00 - 8:00 AM",
@@ -184,9 +190,9 @@ const sampleLabels = [
 ];
 
 const lotes = [
-  { id: "LOTE-001", route: "RUTA-001", zone: "San Isidro / Miraflores", orders: 24, completed: 0, inProgress: 0, pending: 24, status: "pending", estimatedCompletion: "08:00 AM", deadline: "08:00 AM" },
-  { id: "LOTE-002", route: "RUTA-002", zone: "Surco / La Molina", orders: 28, completed: 0, inProgress: 0, pending: 28, status: "pending", estimatedCompletion: "08:30 AM", deadline: "08:30 AM" },
-  { id: "LOTE-003", route: "RUTA-003", zone: "Barranco / Chorrillos", orders: 19, completed: 0, inProgress: 0, pending: 19, status: "pending", estimatedCompletion: "09:00 AM", deadline: "09:00 AM" },
+  { id: "LOTE-001", route: "RUTA-001", zone: "San Isidro / Miraflores", orders: 24, completed: 18, inProgress: 4, pending: 2, status: "assigned", estimatedCompletion: "08:00 AM", deadline: "08:00 AM" },
+  { id: "LOTE-002", route: "RUTA-002", zone: "Surco / La Molina", orders: 28, completed: 28, inProgress: 0, pending: 0, status: "completed", estimatedCompletion: "08:30 AM", deadline: "08:30 AM" },
+  { id: "LOTE-003", route: "RUTA-003", zone: "Barranco / Chorrillos", orders: 19, completed: 12, inProgress: 5, pending: 2, status: "assigned", estimatedCompletion: "09:00 AM", deadline: "09:00 AM" },
   { id: "LOTE-004", route: "RUTA-004", zone: "Jesus Maria / Lince", orders: 22, completed: 0, inProgress: 0, pending: 22, status: "pending", estimatedCompletion: "09:30 AM", deadline: "09:30 AM" },
 ];
 
@@ -225,6 +231,8 @@ function MetricCard({ label, value, icon: Icon, tone }: MetricCardProps) {
 }
 
 export function KitchenOrdersPage() {
+  const [feedback, setFeedback] = useState("");
+
   return (
     <RoleWorkspace
       roleTitle="Dark Kitchen"
@@ -232,6 +240,14 @@ export function KitchenOrdersPage() {
       title="Bandeja de ordenes"
       subtitle="Lotes de produccion asignados para hoy, con prioridad, zona y perfiles nutricionales."
     >
+      {feedback ? (
+        <div className="mb-6 rounded-xl border border-accent/30 bg-accent/5 p-4">
+          <p className="text-sm font-medium text-accent">{feedback}</p>
+          <button className="mt-1 text-xs text-muted-foreground hover:underline" onClick={() => setFeedback("")} type="button">
+            Cerrar
+          </button>
+        </div>
+      ) : null}
       <div className="grid gap-5 md:grid-cols-4">
         {[
           { label: "Pedidos totales", value: "93", icon: Package, tone: "text-primary" },
@@ -303,7 +319,7 @@ export function KitchenOrdersPage() {
                 <Link href="/cocina/produccion" className={buttonVariants({ variant: "hero" })}>
                   Ver produccion <ChevronRight />
                 </Link>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => setFeedback("Lista descargada: produccion_" + batch.id + ".csv")}>
                   <Download /> Descargar lista
                 </Button>
               </div>
@@ -476,6 +492,8 @@ export function KitchenProductionPage() {
 }
 
 export function KitchenLabelingPage() {
+  const [feedback, setFeedback] = useState("");
+
   return (
     <RoleWorkspace
       roleTitle="Dark Kitchen"
@@ -483,6 +501,14 @@ export function KitchenLabelingPage() {
       title="Etiquetado"
       subtitle="Genera, imprime y valida etiquetas termicas por ruta antes de despacho."
     >
+      {feedback ? (
+        <div className="mb-6 rounded-xl border border-accent/30 bg-accent/5 p-4">
+          <p className="text-sm font-medium text-accent">{feedback}</p>
+          <button className="mt-1 text-xs text-muted-foreground hover:underline" onClick={() => setFeedback("")} type="button">
+            Cerrar
+          </button>
+        </div>
+      ) : null}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <Card className="shadow-soft">
@@ -524,10 +550,10 @@ export function KitchenLabelingPage() {
                   </div>
 
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <Button variant="hero">
+                    <Button variant="hero" onClick={() => setFeedback("Etiquetas impresas para " + labelingRoutes.map((rt) => rt.id).join(", ") + ". " + labelingRoutes.filter((rt) => rt.status === "ready").length + " rutas listas.")}>
                       <Printer /> Imprimir etiquetas
                     </Button>
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={() => setFeedback("PDF de etiquetas generado para todas las rutas.")}>
                       <Download /> Descargar PDF
                     </Button>
                   </div>
@@ -620,6 +646,59 @@ export function KitchenLabelingPage() {
 }
 
 export function KitchenLotsPage() {
+  const [batchList, setBatchList] = useState(lotes);
+  const [modal, setModal] = useState<{ type: "markAll" | "markOne" | "incident" | "delay" | "schedule" | null; batchId?: string }>({ type: null });
+  const [incidentMsg, setIncidentMsg] = useState("");
+  const [delayNote, setDelayNote] = useState("");
+
+  const completedTotal = batchList.reduce((s, b) => s + b.completed, 0);
+  const totalOrders = batchList.reduce((s, b) => s + b.orders, 0);
+  const completedBatches = batchList.filter((b) => b.status === "completed").length;
+  const progress = totalOrders > 0 ? Math.round((completedTotal / totalOrders) * 100) : 0;
+
+  function closeModal() {
+    setModal({ type: null });
+    setIncidentMsg("");
+    setDelayNote("");
+  }
+
+  function handleMarkOne(batchId: string) {
+    setBatchList((prev) =>
+      prev.map((b) =>
+        b.id === batchId
+          ? { ...b, status: "completed", completed: b.orders, inProgress: 0, pending: 0 }
+          : b,
+      ),
+    );
+  }
+
+  function handleMarkAllReady() {
+    setBatchList((prev) =>
+      prev.map((b) => ({
+        ...b,
+        status: "completed",
+        completed: b.orders,
+        inProgress: 0,
+        pending: 0,
+      })),
+    );
+    closeModal();
+  }
+
+  function handleReportDelay(batchId: string) {
+    if (!delayNote.trim()) return;
+    setBatchList((prev) =>
+      prev.map((b) =>
+        b.id === batchId
+          ? { ...b, status: "delayed" }
+          : b,
+      ),
+    );
+    closeModal();
+  }
+
+  const modalBatch = modal.batchId ? batchList.find((b) => b.id === modal.batchId) : undefined;
+
   return (
     <RoleWorkspace
       roleTitle="Dark Kitchen"
@@ -628,10 +707,10 @@ export function KitchenLotsPage() {
       subtitle="Supervisa avance, tiempos estimados y confirma produccion lista para despacho."
       actions={
         <>
-          <Button variant="fresh">
+          <Button variant="fresh" onClick={() => setModal({ type: "markAll" })}>
             <CheckCircle /> Marcar todos listos
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => { setIncidentMsg(""); setModal({ type: "incident" }); }}>
             <AlertTriangle /> Reportar incidencia
           </Button>
         </>
@@ -639,10 +718,10 @@ export function KitchenLotsPage() {
     >
       <div className="grid gap-5 md:grid-cols-4">
         {[
-          { label: "Pedidos totales", value: "93", icon: Package, tone: "text-primary" },
-          { label: "Completados", value: "0", icon: CheckCircle, tone: "text-accent" },
-          { label: "Lotes pendientes", value: "4", icon: Clock, tone: "text-warning" },
-          { label: "Progreso general", value: "0%", icon: TrendingUp, tone: "text-primary" },
+          { label: "Pedidos totales", value: totalOrders.toString(), icon: Package, tone: "text-primary" },
+          { label: "Completados", value: completedTotal.toString(), icon: CheckCircle, tone: "text-accent" },
+          { label: "Lotes pendientes", value: (batchList.length - completedBatches).toString(), icon: Clock, tone: "text-warning" },
+          { label: "Progreso general", value: progress + "%", icon: TrendingUp, tone: "text-primary" },
         ].map((stat) => {
           const Icon = stat.icon;
           return <MetricCard key={stat.label} icon={Icon} label={stat.label} tone={stat.tone} value={stat.value} />;
@@ -651,82 +730,107 @@ export function KitchenLotsPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          {lotes.map((batch) => (
-            <Card key={batch.id} className="p-6 shadow-soft">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary">
-                    <Package className="h-6 w-6" />
+          {batchList.map((batch) => {
+            const batchProgress = batch.orders > 0 ? Math.round((batch.completed / batch.orders) * 100) : 0;
+            return (
+              <Card key={batch.id} className="p-6 shadow-soft">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary">
+                      <Package className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold">{batch.id}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{batch.zone}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Ruta: {batch.route}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-display text-xl font-bold">{batch.id}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{batch.zone}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Ruta: {batch.route}</p>
+                  {batch.status === "completed" ? (
+                    <Badge className="bg-accent-soft text-accent hover:bg-accent-soft">Listo</Badge>
+                  ) : batch.status === "delayed" ? (
+                    <Badge className="bg-destructive/15 text-destructive hover:bg-destructive/15">Retrasado</Badge>
+                  ) : batch.status === "assigned" ? (
+                    <Badge className="bg-primary/15 text-primary hover:bg-primary/15">En progreso</Badge>
+                  ) : (
+                    <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">Pendiente</Badge>
+                  )}
+                </div>
+
+                <div className="mt-5 grid gap-4 rounded-2xl bg-secondary/40 p-4 md:grid-cols-4">
+                  <div className="text-center"><div className="font-display text-2xl font-extrabold text-primary">{batch.orders}</div><div className="text-xs text-muted-foreground">Total pedidos</div></div>
+                  <div className="text-center"><div className="font-display text-2xl font-extrabold text-accent">{batch.completed}</div><div className="text-xs text-muted-foreground">Completados</div></div>
+                  <div className="text-center"><div className="font-display text-2xl font-extrabold text-warning">{batch.inProgress}</div><div className="text-xs text-muted-foreground">En proceso</div></div>
+                  <div className="text-center"><div className="font-display text-2xl font-extrabold text-foreground">{batch.pending}</div><div className="text-xs text-muted-foreground">Pendientes</div></div>
+                </div>
+
+                <div className="mt-5">
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Progreso</span>
+                    <span className="font-medium">{batchProgress}%</span>
                   </div>
+                  <Progress className="h-3" value={batchProgress} />
                 </div>
-                <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">Pendiente</Badge>
-              </div>
 
-              <div className="mt-5 grid gap-4 rounded-2xl bg-secondary/40 p-4 md:grid-cols-4">
-                <div className="text-center"><div className="font-display text-2xl font-extrabold text-primary">{batch.orders}</div><div className="text-xs text-muted-foreground">Total pedidos</div></div>
-                <div className="text-center"><div className="font-display text-2xl font-extrabold text-accent">{batch.completed}</div><div className="text-xs text-muted-foreground">Completados</div></div>
-                <div className="text-center"><div className="font-display text-2xl font-extrabold text-warning">{batch.inProgress}</div><div className="text-xs text-muted-foreground">En proceso</div></div>
-                <div className="text-center"><div className="font-display text-2xl font-extrabold text-foreground">{batch.pending}</div><div className="text-xs text-muted-foreground">Pendientes</div></div>
-              </div>
-
-              <div className="mt-5">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Progreso</span>
-                  <span className="font-medium">0%</span>
+                <div className="mt-5 flex items-center justify-between rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Clock className="h-4 w-4" /> Hora limite: {batch.deadline}
+                  </div>
+                  <span className="text-muted-foreground">Est. finalizacion: {batch.estimatedCompletion}</span>
                 </div>
-                <Progress className="h-3" value={0} />
-              </div>
 
-              <div className="mt-5 flex items-center justify-between rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm">
-                <div className="flex items-center gap-2 text-primary">
-                  <Clock className="h-4 w-4" /> Hora limite: {batch.deadline}
-                </div>
-                <span className="text-muted-foreground">Est. finalizacion: {batch.estimatedCompletion}</span>
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button variant="fresh">
-                  <CheckCircle /> Marcar como listo
-                </Button>
-                <Button variant="outline">
-                  <AlertTriangle /> Reportar retraso
-                </Button>
-              </div>
-            </Card>
-          ))}
+                {batch.status !== "completed" && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Button variant="fresh" onClick={() => handleMarkOne(batch.id)}>
+                      <CheckCircle /> Marcar como listo
+                    </Button>
+                    <Button variant="outline" onClick={() => { setDelayNote(""); setModal({ type: "delay", batchId: batch.id }); }}>
+                      <AlertTriangle /> Reportar retraso
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            );
+          })}
         </div>
 
         <div className="space-y-6">
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Acciones rapidas</h3>
-            <div className="mt-4 space-y-3">
-              <Button className="w-full justify-start" variant="fresh">
-                <CheckCircle /> Marcar todos listos
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Clock /> Ver cronograma
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <AlertTriangle /> Reportar incidencia
-              </Button>
+            <div className="mt-4 space-y-2">
+              <button
+                className="flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left text-sm font-medium text-muted-foreground transition-smooth hover:border-primary/30 hover:bg-secondary hover:text-foreground"
+                onClick={() => setModal({ type: "markAll" })}
+                type="button"
+              >
+                <CheckCircle className="h-4 w-4" />Marcar todos listos
+              </button>
+              <button
+                className="flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left text-sm font-medium text-muted-foreground transition-smooth hover:border-primary/30 hover:bg-secondary hover:text-foreground"
+                onClick={() => setModal({ type: "schedule" })}
+                type="button"
+              >
+                <Clock className="h-4 w-4" />Ver cronograma
+              </button>
+              <button
+                className="flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left text-sm font-medium text-muted-foreground transition-smooth hover:border-primary/30 hover:bg-secondary hover:text-foreground"
+                onClick={() => { setIncidentMsg(""); setModal({ type: "incident" }); }}
+                type="button"
+              >
+                <AlertTriangle className="h-4 w-4" />Reportar incidencia
+              </button>
             </div>
           </Card>
 
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Tiempo estimado restante</h3>
             <div className="mt-4 space-y-4">
-              {lotes.map((batch) => (
+              {batchList.map((batch) => (
                 <div key={batch.id}>
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{batch.id}</span>
-                    <span className="font-medium text-primary">~85 min</span>
+                    <span className="font-medium text-primary">{batch.status === "completed" ? "Listo" : "~85 min"}</span>
                   </div>
-                  <Progress className="h-2" value={0} />
+                  <Progress className="h-2" value={batch.status === "completed" ? 100 : batch.orders > 0 ? Math.round((batch.completed / batch.orders) * 100) : 0} />
                 </div>
               ))}
             </div>
@@ -735,14 +839,109 @@ export function KitchenLotsPage() {
           <Card className="bg-gradient-hero p-6 text-primary-foreground shadow-elegant">
             <h3 className="font-display text-lg font-bold">Rendimiento de hoy</h3>
             <div className="mt-4 space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Lotes completados</span><span>0/4</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Eficiencia</span><span>--</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Retrasos</span><span>0</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Lotes completados</span><span>{completedBatches}/{batchList.length}</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Eficiencia</span><span>{completedBatches > 0 ? Math.round((completedBatches / batchList.length) * 100) + "%" : "--"}</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Retrasos</span><span>{batchList.filter((b) => b.status === "delayed").length}</span></div>
               <div className="flex justify-between"><span className="text-primary-foreground/80">Calidad</span><span>100%</span></div>
             </div>
           </Card>
         </div>
       </div>
+
+      {modal.type ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <Card className="relative w-full max-w-md overflow-hidden shadow-elegant">
+
+            {modal.type === "markAll" && (
+              <>
+                <div className="flex items-center justify-between border-b border-border px-6 py-4">
+                  <h3 className="font-display text-xl font-bold">Marcar todos listos</h3>
+                  <Button variant="ghost" size="icon" onClick={closeModal}><X className="h-5 w-5" /></Button>
+                </div>
+                <div className="space-y-4 p-6">
+                  <p className="text-sm text-muted-foreground">Esto marcara los {batchList.length} lotes como completados. Todas las entregas pasaran a estado listo para despacho.</p>
+                  <div className="space-y-2">
+                    {batchList.map((b) => (
+                      <div key={b.id} className="flex items-center justify-between rounded-xl bg-secondary/40 p-3 text-sm">
+                        <span className="font-medium">{b.id}</span>
+                        <span className="text-muted-foreground">{b.zone}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="fresh" className="w-full" onClick={handleMarkAllReady}>Confirmar todos listos</Button>
+                </div>
+              </>
+            )}
+
+            {modal.type === "incident" && (
+              <>
+                <div className="flex items-center justify-between border-b border-border px-6 py-4">
+                  <h3 className="font-display text-xl font-bold">Reportar incidencia</h3>
+                  <Button variant="ghost" size="icon" onClick={closeModal}><X className="h-5 w-5" /></Button>
+                </div>
+                <div className="space-y-4 p-6">
+                  <select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" defaultValue="">
+                    <option value="" disabled>Selecciona un lote</option>
+                    {batchList.map((b) => <option key={b.id}>{b.id} - {b.zone}</option>)}
+                  </select>
+                  <Input value={incidentMsg} onChange={(e) => setIncidentMsg(e.target.value)} placeholder="Describe la incidencia..." />
+                  <Button variant="hero" className="w-full" onClick={() => { if (incidentMsg.trim()) closeModal(); }} disabled={!incidentMsg.trim()}>Enviar reporte</Button>
+                </div>
+              </>
+            )}
+
+            {modal.type === "delay" && modalBatch && (
+              <>
+                <div className="flex items-center justify-between border-b border-border px-6 py-4">
+                  <div>
+                    <h3 className="font-display text-xl font-bold">Reportar retraso</h3>
+                    <p className="text-sm text-muted-foreground">{modalBatch.id} · {modalBatch.zone}</p>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={closeModal}><X className="h-5 w-5" /></Button>
+                </div>
+                <div className="space-y-4 p-6">
+                  <div className="rounded-xl bg-warning/10 border border-warning/20 p-4 text-sm">
+                    <AlertTriangle className="mb-2 h-5 w-5 text-warning" />
+                    <p className="text-muted-foreground">El administrador y el equipo de logistica seran notificados automaticamente.</p>
+                  </div>
+                  <Input value={delayNote} onChange={(e) => setDelayNote(e.target.value)} placeholder="Motivo del retraso..." />
+                  <Button variant="hero" className="w-full" onClick={() => handleReportDelay(modalBatch.id)} disabled={!delayNote.trim()}>Reportar retraso</Button>
+                </div>
+              </>
+            )}
+
+            {modal.type === "schedule" && (
+              <>
+                <div className="flex items-center justify-between border-b border-border px-6 py-4">
+                  <h3 className="font-display text-xl font-bold">Cronograma de produccion</h3>
+                  <Button variant="ghost" size="icon" onClick={closeModal}><X className="h-5 w-5" /></Button>
+                </div>
+                <div className="space-y-3 p-6">
+                  {batchList.map((b) => (
+                    <div key={b.id} className="rounded-xl border border-border bg-secondary/40 p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{b.id}</div>
+                          <div className="text-xs text-muted-foreground">{b.zone} · Ruta {b.route}</div>
+                        </div>
+                        <Badge className={b.status === "completed" ? "bg-accent-soft text-accent" : "bg-secondary"}>
+                          {b.status === "completed" ? "Listo" : b.deadline}
+                        </Badge>
+                      </div>
+                      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                        <span>{b.orders} pedidos</span>
+                        <span>·</span>
+                        <span>Est. finalizacion: {b.estimatedCompletion}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+          </Card>
+        </div>
+      ) : null}
     </RoleWorkspace>
   );
 }

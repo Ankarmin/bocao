@@ -1,5 +1,5 @@
 export const siteAssets = {
-  favicon: "/bocao-logo.ico",
+  favicon: "/favicon.ico",
   logo: "/bocao-logo.webp",
   heroMeals: "/hero-meals.jpg",
   logoWidth: 2439,

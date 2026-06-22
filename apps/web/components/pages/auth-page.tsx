@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -73,7 +74,7 @@ export default function AuthPage() {
     event.preventDefault();
 
     if (!signupName.trim() || !signupEmail.trim() || !signupPassword.trim()) {
-      setError("Completa nombre, correo y contrasena para crear tu cuenta.");
+      setError("Completa nombre, correo y contraseña para crear tu cuenta.");
       return;
     }
 
@@ -88,14 +89,16 @@ export default function AuthPage() {
       <section className="container flex items-center justify-center py-16">
         <Card className="w-full max-w-md p-8 shadow-elegant">
           <div className="mb-6 flex flex-col items-center text-center">
-            <Image
-              src={siteAssets.logo}
-              alt="BOCAO"
-              className="h-16 w-16 object-contain md:h-[72px] md:w-[72px]"
-              height={siteAssets.logoHeight}
-              sizes="(min-width: 768px) 72px, 64px"
-              width={siteAssets.logoWidth}
-            />
+            <Link href="/">
+              <Image
+                src={siteAssets.logo}
+                alt="BOCAO"
+                className="h-16 w-16 object-contain md:h-[72px] md:w-[72px]"
+                height={siteAssets.logoHeight}
+                sizes="(min-width: 768px) 72px, 64px"
+                width={siteAssets.logoWidth}
+              />
+            </Link>
             <h1 className="mt-3 font-display text-2xl font-bold">Bienvenido a BOCAO</h1>
             <p className="text-sm text-muted-foreground">Accede o crea tu cuenta para empezar</p>
           </div>
@@ -141,7 +144,7 @@ export default function AuthPage() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="login-password" className="text-sm font-medium">
-                  Contrasena
+                  Contraseña
                 </label>
                 <Input
                   id="login-password"
@@ -154,9 +157,12 @@ export default function AuthPage() {
               <button className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")} type="submit">
                 Ingresar
               </button>
-              <button className="block w-full text-center text-sm text-primary hover:underline" type="button">
-                Olvidaste tu contrasena?
-              </button>
+              <Link
+                href="/recuperar"
+                className="block w-full text-center text-sm text-primary hover:underline"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
             </form>
           ) : (
             <form className="space-y-4 pt-5" onSubmit={handleSignupSubmit}>
@@ -180,7 +186,7 @@ export default function AuthPage() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="signup-password" className="text-sm font-medium">
-                  Contrasena
+                  Contraseña
                 </label>
                 <Input
                   id="signup-password"

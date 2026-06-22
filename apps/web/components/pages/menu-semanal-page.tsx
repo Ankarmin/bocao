@@ -11,7 +11,6 @@ import {
   Sparkles,
   Sun,
   Sunset,
-  UtensilsCrossed,
 } from "lucide-react";
 
 import { PublicPageShell } from "@/components/layout/public-page-shell";
@@ -94,9 +93,6 @@ export default function MenuSemanalPage() {
 
         <div className="container py-20 md:py-28">
           <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3 py-1 text-xs font-semibold text-accent">
-              <UtensilsCrossed className="h-3 w-3" /> Menú rotativo
-            </span>
             <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight md:text-5xl lg:text-6xl">
               Así se ve una semana
               <span className="block text-primary">con BOCAO.</span>

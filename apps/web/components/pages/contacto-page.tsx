@@ -7,7 +7,6 @@ import {
   HelpCircle,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
   Send,
   Sparkles,
@@ -100,9 +99,6 @@ export default function ContactoPage() {
 
         <div className="container py-20 md:py-28">
           <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-              <MessageCircle className="h-3 w-3" /> Conversemos
-            </span>
             <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight md:text-5xl lg:text-6xl">
               ¿Tienes preguntas?
               <span className="block text-primary">Estamos para ayudarte.</span>

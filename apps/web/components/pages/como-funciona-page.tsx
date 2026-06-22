@@ -7,7 +7,6 @@ import {
   ClipboardList,
   PackageCheck,
   Settings,
-  Sparkles,
   Truck,
   UserCheck,
   Utensils,
@@ -99,9 +98,6 @@ export default function ComoFuncionaPage() {
 
         <div className="container py-20 md:py-28">
           <div data-scroll-reveal="hero" className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="h-3 w-3" /> Proceso simple
-            </span>
             <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight md:text-5xl lg:text-6xl">
               De tu perfil a tu mesa,
               <span className="block text-primary">en 4 pasos.</span>
