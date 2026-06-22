@@ -48,6 +48,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
   const { isHydrated, session, signOut } = useAuth();
 
   const accountPath = session ? getRoleHomePath(session.role) : "/dashboard";
@@ -56,6 +57,7 @@ export function SiteHeader() {
   function handleSignOut() {
     signOut();
     setMobileMenuOpen(false);
+    setConfirmSignOut(false);
     router.push("/");
   }
 
@@ -109,9 +111,33 @@ export function SiteHeader() {
                     <div className="text-xs text-muted-foreground">{accountLabel}</div>
                   </div>
                 </Link>
-                <Button variant="ghost" onClick={handleSignOut}>
-                  <LogOut /> Salir
-                </Button>
+                <div className="relative">
+                  <Button variant="ghost" onClick={() => setConfirmSignOut((v) => !v)}>
+                    <LogOut /> Salir
+                  </Button>
+                  {confirmSignOut ? (
+                    <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card p-4 shadow-elegant">
+                      <p className="text-sm font-medium text-foreground">¿Cerrar sesión?</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Volverás a la página de inicio.</p>
+                      <div className="mt-3 flex gap-2">
+                        <button
+                          className="flex-1 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90"
+                          onClick={handleSignOut}
+                          type="button"
+                        >
+                          Sí, salir
+                        </button>
+                        <button
+                          className="flex-1 rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-secondary"
+                          onClick={() => setConfirmSignOut(false)}
+                          type="button"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
               </>
             ) : (
               <>
@@ -164,9 +190,20 @@ export function SiteHeader() {
                       <div className="text-xs text-muted-foreground">{accountLabel}</div>
                     </div>
                   </Link>
-                  <Button className="mt-2 justify-center" variant="ghost" onClick={handleSignOut}>
-                    <LogOut /> Cerrar sesion
-                  </Button>
+                  {confirmSignOut ? (
+                    <div className="mt-2 rounded-xl border border-border bg-card p-4 shadow-elegant">
+                      <p className="text-sm font-medium">¿Cerrar sesión?</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Volverás a la página de inicio.</p>
+                      <div className="mt-3 flex gap-2">
+                        <button className="flex-1 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground" onClick={handleSignOut} type="button">Sí, salir</button>
+                        <button className="flex-1 rounded-lg border border-border px-3 py-2 text-xs font-medium" onClick={() => setConfirmSignOut(false)} type="button">Cancelar</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button className="mt-2 justify-center" variant="ghost" onClick={() => setConfirmSignOut(true)}>
+                      <LogOut /> Cerrar sesion
+                    </Button>
+                  )}
                 </>
               ) : (
                 <>

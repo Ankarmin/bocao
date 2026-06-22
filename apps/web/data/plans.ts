@@ -15,7 +15,7 @@ export type Plan = {
 export const PLANS: Plan[] = [
   {
     id: "basico",
-    name: "Basico",
+    name: "Básico",
     tagline: "Empieza tu camino saludable",
     price: 199,
     currency: "S/",
@@ -26,14 +26,14 @@ export const PLANS: Plan[] = [
     features: [
       "7 almuerzos balanceados",
       "1 entrega semanal",
-      "Perfil nutricional basico",
+      "Perfil nutricional básico",
       "Sustituciones limitadas",
     ],
   },
   {
     id: "estandar",
-    name: "Estandar",
-    tagline: "El mas elegido por nuestra comunidad",
+    name: "Estándar",
+    tagline: "El más elegido por nuestra comunidad",
     price: 329,
     currency: "S/",
     period: "semana",
@@ -52,7 +52,7 @@ export const PLANS: Plan[] = [
   {
     id: "premium",
     name: "Premium",
-    tagline: "Maxima personalizacion y resultados",
+    tagline: "Máxima personalización y resultados",
     price: 499,
     currency: "S/",
     period: "semana",
@@ -60,7 +60,7 @@ export const PLANS: Plan[] = [
     deliveriesPerWeek: 3,
     accent: "primary",
     features: [
-      "21 comidas (3 al dia)",
+      "21 comidas (3 al día)",
       "3 entregas frescas por semana",
       "Plan 1:1 con nutricionista",
       "Recetas premium de chef",

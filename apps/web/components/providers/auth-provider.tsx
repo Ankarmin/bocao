@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const normalizedEmail = email.trim().toLowerCase();
 
         if (!normalizedEmail || !password.trim()) {
-          return { ok: false, error: "Ingresa tu correo y contrasena para continuar." };
+          return { ok: false, error: "Ingresa tu correo y contraseña para continuar." };
         }
 
         const role = inferRoleFromEmail(normalizedEmail);

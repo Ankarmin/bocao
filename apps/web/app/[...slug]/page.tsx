@@ -16,9 +16,11 @@ import DashboardPage from "@/components/pages/dashboard-page";
 import { KitchenLabelingPage, KitchenLotsPage, KitchenProductionPage } from "@/components/pages/kitchen-section-pages";
 import MenuSemanalPage from "@/components/pages/menu-semanal-page";
 import PlanesPage from "@/components/pages/planes-page";
+import RecuperarPage from "@/components/pages/recuperar-page";
 import ResumenPage from "@/components/pages/resumen-page";
 import SobreNosotrosPage from "@/components/pages/sobre-nosotros-page";
 import TestimoniosPage from "@/components/pages/testimonios-page";
+import { UserNutritionPage, UserOrdersPage, UserProfilePage } from "@/components/pages/user-section-pages";
 
 type CatchAllPageProps = {
   params: Promise<{ slug: string[] }>;
@@ -30,6 +32,7 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
 
   const adminRoute = (page: ReactNode) => <ProtectedRoute roles={["admin"]}>{page}</ProtectedRoute>;
   const kitchenRoute = (page: ReactNode) => <ProtectedRoute roles={["kitchen"]}>{page}</ProtectedRoute>;
+  const customerRoute = (page: ReactNode) => <ProtectedRoute roles={["customer"]}>{page}</ProtectedRoute>;
 
   switch (path) {
     case "sobre-nosotros":
@@ -44,6 +47,8 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
       return <TestimoniosPage />;
     case "contacto":
       return <ContactoPage />;
+    case "recuperar":
+      return <RecuperarPage />;
     case "auth":
       return <AuthPage />;
     case "configurar":
@@ -55,11 +60,13 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
     case "confirmacion":
       return <ConfirmacionPage />;
     case "dashboard":
-      return (
-        <ProtectedRoute roles={["customer"]}>
-          <DashboardPage />
-        </ProtectedRoute>
-      );
+      return customerRoute(<DashboardPage />);
+    case "dashboard/pedidos":
+      return customerRoute(<UserOrdersPage />);
+    case "dashboard/perfil":
+      return customerRoute(<UserProfilePage />);
+    case "dashboard/nutricion":
+      return customerRoute(<UserNutritionPage />);
     case "admin":
       return adminRoute(<AdminPage />);
     case "admin/logistica":

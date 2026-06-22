@@ -85,10 +85,15 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-12px)" },
         },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(400%)" },
+        },
       },
       animation: {
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) both",
         float: "float 6s ease-in-out infinite",
+        shimmer: "shimmer 1s ease-in-out infinite",
       },
     },
   },
