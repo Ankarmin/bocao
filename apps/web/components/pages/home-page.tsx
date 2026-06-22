@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 import {
   ArrowRight,
   ChefHat,
@@ -12,14 +11,12 @@ import {
   PackageCheck,
   Quote,
   Salad,
-  Sparkles,
   Star,
   Truck,
 } from "lucide-react";
 
 import { PublicPageShell } from "@/components/layout/public-page-shell";
 import { PlansGrid } from "@/components/plans/plan-card";
-import { useAuth } from "@/components/providers/auth-provider";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { siteAssets } from "@/lib/assets";
@@ -42,7 +39,7 @@ const benefits = [
     text: "Tus comidas llegan listas, frescas y en empaques sostenibles.",
   },
   {
-    icon: Sparkles,
+    icon: Salad,
     title: "100% personalizable",
     text: "Cambia preferencias, alergias y porciones cuando lo necesites.",
   },
@@ -73,18 +70,6 @@ const testimonials = [
 ];
 
 export default function HomePage() {
-  const { isHydrated, session, signOut } = useAuth();
-
-  useEffect(() => {
-    if (!isHydrated || !session) {
-      return;
-    }
-
-    if (session.role === "admin" || session.role === "kitchen") {
-      signOut();
-    }
-  }, [isHydrated, session, signOut]);
-
   return (
     <PublicPageShell>
       {/* Hero */}
@@ -95,9 +80,6 @@ export default function HomePage() {
 
         <div data-scroll-reveal-stagger className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-24">
           <div data-scroll-reveal="hero" className="space-y-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="h-3 w-3" /> Suscripción de comida saludable
-            </span>
             <h1 className="font-display text-5xl font-extrabold leading-[1.12] tracking-tight md:text-6xl lg:text-7xl">
               Come bien.
               <span className="mt-1 block pb-1 text-primary">Vive mejor.</span>
