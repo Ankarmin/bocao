@@ -24,6 +24,13 @@ export default function ResumenPage() {
   const delivery = plan.price * 0.05;
   const total = plan.price + delivery;
 
+  const deliveryDays =
+    plan.deliveriesPerWeek === 1
+      ? ["Lunes"]
+      : plan.deliveriesPerWeek === 2
+        ? ["Lunes", "Jueves"]
+        : ["Lunes", "Miercoles", "Viernes"];
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -78,11 +85,11 @@ export default function ResumenPage() {
                 <Calendar className="h-5 w-5 text-primary" /> Cronograma de entregas
               </h3>
               <ul className="space-y-3 text-sm">
-                {[1, 2, 3].map((week) => (
+                {[1, 2, 3].slice(0, plan.deliveriesPerWeek > 1 ? 3 : 1).map((week) => (
                   <li key={week} className="flex items-center justify-between rounded-lg border border-border p-3">
                     <div className="flex items-center gap-3">
                       <Truck className="h-4 w-4 text-accent" />
-                      <span>Semana {week} - Lunes y Jueves</span>
+                      <span>Semana {week} - {deliveryDays.join(" y ")}</span>
                     </div>
                     <span className="text-muted-foreground">9:00 - 12:00</span>
                   </li>
