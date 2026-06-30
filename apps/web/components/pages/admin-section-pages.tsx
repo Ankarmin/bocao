@@ -2,7 +2,7 @@
 
 import type { ComponentType } from "react";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -53,73 +53,30 @@ const adminLinks: SidebarLink[] = [
 ];
 
 const consolidationIngredients = [
-  { name: "Pollo organico", quantity: "35 kg", orders: 89, suppliers: ["SupraFresh", "OrganicPeru"], priority: "high" },
-  { name: "Quinua blanca", quantity: "18 kg", orders: 124, suppliers: ["AndesFoods"], priority: "high" },
-  { name: "Brocoli fresco", quantity: "28 kg", orders: 156, suppliers: ["VerdeFresh"], priority: "medium" },
-  { name: "Salmon atlantico", quantity: "22 kg", orders: 67, suppliers: ["FreshSea"], priority: "high" },
-  { name: "Arroz integral", quantity: "32 kg", orders: 178, suppliers: ["Molinos del Sur"], priority: "low" },
-  { name: "Almendras", quantity: "8 kg", orders: 95, suppliers: ["NutriNuts"], priority: "medium" },
-  { name: "Espinaca fresca", quantity: "15 kg", orders: 112, suppliers: ["VerdeFresh", "BioHuerta"], priority: "medium" },
-  { name: "Aguacate hass", quantity: "45 unidades", orders: 89, suppliers: ["TropicalPeru"], priority: "high" },
+  { name: "Pechuga de pollo", quantity: "120 kg", orders: 142, suppliers: ["Avicola San Fernando", "Dist. La Granja"], priority: "high" },
+  { name: "Salmón fresco", quantity: "85 kg", orders: 98, suppliers: ["Pesquera del Sur", "Oceanfoods"], priority: "high" },
+  { name: "Garbanzos", quantity: "45 kg", orders: 87, suppliers: ["Importadora del Sol"], priority: "medium" },
+  { name: "Quinua", quantity: "60 kg", orders: 76, suppliers: ["Agroexport Peru", "Granos Andinos"], priority: "medium" },
+  { name: "Aceite de oliva", quantity: "28 L", orders: 65, suppliers: ["Dist. La Espanola", "Oliosol"], priority: "low" },
+  { name: "Vegetales surtidos", quantity: "200 kg", orders: 142, suppliers: ["Campo Verde", "Hortifrut SAC"], priority: "medium" },
+  { name: "Pasta integral", quantity: "52 kg", orders: 58, suppliers: ["Dist. Molitalia"], priority: "low" },
+  { name: "Huevos organicos", quantity: "360 unid", orders: 112, suppliers: ["Granja La Chacra", "Avicola San Fernando"], priority: "high" },
 ];
 
 const consolidationKitchens = [
-  { name: "Dark Kitchen Norte", assigned: 78, capacity: 100 },
-  { name: "Dark Kitchen Centro", assigned: 92, capacity: 100 },
-  { name: "Dark Kitchen Sur", assigned: 75, capacity: 100 },
+  { name: "BOCAO Kitchen Miraflores", assigned: 98, capacity: 120 },
+  { name: "BOCAO Kitchen Surco", assigned: 82, capacity: 100 },
+  { name: "BOCAO Kitchen Barranco", assigned: 65, capacity: 80 },
 ];
 
 const logisticsRoutes = [
-  {
-    id: "RUTA-001",
-    driver: "Carlos Mendoza",
-    phone: "+51 999 888 777",
-    vehicle: "Toyota Hiace - ABC-123",
-    zone: "San Isidro / Miraflores",
-    deliveries: 24,
-    completed: 18,
-    status: "en_ruta",
-    estimatedCompletion: "11:30 AM",
-    currentLocation: "Av. Pardo 456, Miraflores",
-  },
-  {
-    id: "RUTA-002",
-    driver: "Maria Gonzalez",
-    phone: "+51 999 777 666",
-    vehicle: "Hyundai H1 - XYZ-456",
-    zone: "Surco / La Molina",
-    deliveries: 28,
-    completed: 28,
-    status: "completado",
-    estimatedCompletion: "Completado",
-    currentLocation: "Base BOCAO Norte",
-  },
-  {
-    id: "RUTA-003",
-    driver: "Jorge Ramirez",
-    phone: "+51 999 666 555",
-    vehicle: "Nissan Urvan - DEF-789",
-    zone: "Barranco / Chorrillos",
-    deliveries: 19,
-    completed: 12,
-    status: "en_ruta",
-    estimatedCompletion: "12:00 PM",
-    currentLocation: "Av. Grau 789, Barranco",
-  },
-  {
-    id: "RUTA-004",
-    driver: "Ana Torres",
-    phone: "+51 999 555 444",
-    vehicle: "Toyota Hiace - GHI-012",
-    zone: "Jesus Maria / Lince",
-    deliveries: 22,
-    completed: 0,
-    status: "preparando",
-    estimatedCompletion: "10:00 AM",
-    currentLocation: "Base BOCAO Centro",
-  },
+  { id: "RUTA-001", driver: "Carlos Mendoza", phone: "+51 987 654 321", vehicle: "Suzuki APV - ABC-123", zone: "San Isidro / Miraflores", deliveries: 18, completed: 14, status: "en_ruta", estimatedCompletion: "12:30 PM", currentLocation: "Av. Pardo, Miraflores" },
+  { id: "RUTA-002", driver: "Pedro Sanchez", phone: "+51 999 888 777", vehicle: "Toyota Hiace - DEF-456", zone: "Surco / La Molina", deliveries: 22, completed: 22, status: "completado", estimatedCompletion: "11:45 AM", currentLocation: "BOCAO Kitchen Surco" },
+  { id: "RUTA-003", driver: "Jorge Ramirez", phone: "+51 955 444 333", vehicle: "Suzuki APV - GHI-789", zone: "Barranco / Chorrillos", deliveries: 18, completed: 12, status: "en_ruta", estimatedCompletion: "1:15 PM", currentLocation: "Av. Grau, Barranco" },
+  { id: "RUTA-004", driver: "Ana Torres", phone: "+51 911 222 111", vehicle: "Toyota Hiace - JKL-012", zone: "Jesus Maria / Lince", deliveries: 20, completed: 0, status: "preparando", estimatedCompletion: "2:00 PM", currentLocation: "BOCAO Kitchen Miraflores" },
 ];
 
+// TODO: reemplazar con GET /logistics/routes/:id/waypoints
 const logisticsRouteCoords: Record<string, { center: [number, number]; truck: [number, number]; points: MapPoint[] }> = {
   "RUTA-001": {
     center: [-12.1150, -77.0347],
@@ -248,69 +205,30 @@ type Incident = {
   status: string;
   affectedOrders: number;
   createdAt: string;
+  resolvedAt?: string;
   assignedTo: string;
   kitchen?: string;
   solution?: string;
 };
 
 const incidents: Incident[] = [
-  {
-    id: "INC-2026-001",
-    title: "Retraso en Dark Kitchen Norte",
-    description: "Demora de 45 minutos en produccion del lote LOTE-001.",
-    severity: "high",
-    status: "en_proceso",
-    affectedOrders: 24,
-    createdAt: "2026-05-03 08:15",
-    assignedTo: "Maria Gonzalez",
-    kitchen: "Dark Kitchen Norte",
-  },
-  {
-    id: "INC-2026-002",
-    title: "Vehiculo con falla mecanica",
-    description: "El vehiculo ABC-123 presento una falla en motor durante la ruta RUTA-001.",
-    severity: "critical",
-    status: "resuelto",
-    affectedOrders: 24,
-    createdAt: "2026-05-03 06:30",
-    assignedTo: "Carlos Mendoza",
-    solution: "Se asigno una unidad de respaldo y las entregas fueron reprogramadas.",
-  },
-  {
-    id: "INC-2026-003",
-    title: "Faltante de salmon fresco",
-    description: "Proveedor FreshSea no entrego 8 kg del volumen confirmado para hoy.",
-    severity: "medium",
-    status: "en_proceso",
-    affectedOrders: 12,
-    createdAt: "2026-05-03 09:00",
-    assignedTo: "Ana Torres",
-    kitchen: "Dark Kitchen Sur",
-  },
-  {
-    id: "INC-2026-004",
-    title: "Cliente reporta entrega incorrecta",
-    description: "Pedido #BOCAO-2026-156 entregado con menu equivocado.",
-    severity: "low",
-    status: "resuelto",
-    affectedOrders: 1,
-    createdAt: "2026-05-03 10:30",
-    assignedTo: "Jorge Ramirez",
-    solution: "Se envio el pedido correcto y se aplico un descuento al cliente.",
-  },
+  { id: "INC-2026-001", title: "Retraso en lotes de cocina Miraflores", description: "La cocina Miraflores reportó retraso en la preparación de 2 lotes por falla eléctrica. Producción detenida entre 6:30 AM - 8:00 AM.", severity: "high", status: "en_proceso", affectedOrders: 12, createdAt: "2026-05-03 07:15", assignedTo: "Maria Gonzalez", kitchen: "BOCAO Kitchen Miraflores" },
+  { id: "INC-2026-002", title: "Vehículo RUTA-003 con desperfecto mecánico", description: "La unidad Suzuki APV de la RUTA-003 presenta falla en el sistema de refrigeración. Requiere mantenimiento antes de salir.", severity: "critical", status: "resuelto", affectedOrders: 18, createdAt: "2026-05-03 05:40", resolvedAt: "2026-05-03 07:20", assignedTo: "Luis Vargas", solution: "Se asignó vehículo de respaldo Toyota Hiace. Ruta retrasada 45 min." },
+  { id: "INC-2026-003", title: "Faltante de insumos - Salmón fresco", description: "El proveedor Pesquera del Sur reportó que no podrá entregar el 30% del pedido de salmón por problemas de captura.", severity: "medium", status: "en_proceso", affectedOrders: 22, createdAt: "2026-05-03 06:00", assignedTo: "Carla Ruiz", kitchen: "BOCAO Kitchen Surco" },
+  { id: "INC-2026-004", title: "Cliente reporta dirección incorrecta", description: "El cliente Juan Perez (PED-1042) notificó que su dirección de entrega es incorrecta. Solicita cambio a Av. Pardo 123.", severity: "low", status: "resuelto", affectedOrders: 1, createdAt: "2026-05-03 08:30", resolvedAt: "2026-05-03 08:45", assignedTo: "Maria Gonzalez", solution: "Dirección actualizada en el sistema. Pedido re-etiquetado y reasignado a RUTA-001." },
 ];
 
 const managementUsers = [
-  { id: 1, name: "Juan Perez", email: "juan.perez@email.com", role: "customer", plan: "Estandar", status: "active", deliveries: 63, satisfaction: 98 },
-  { id: 2, name: "Maria Gonzalez", email: "maria@bocao.pe", role: "kitchen", plan: "--", status: "active", deliveries: 289, satisfaction: 100 },
-  { id: 3, name: "Carlos Garcia", email: "carlos@example.com", role: "customer", plan: "Basico", status: "paused", deliveries: 12, satisfaction: 85 },
-  { id: 4, name: "Admin Sistema", email: "admin@bocao.pe", role: "admin", plan: "--", status: "active", deliveries: 0, satisfaction: 100 },
+  { id: 1, name: "Juan Perez", email: "juan@email.com", role: "customer", plan: "Estandar", status: "active", deliveries: 24, satisfaction: 95 },
+  { id: 2, name: "Maria Gonzalez", email: "maria@email.com", role: "admin", plan: "--", status: "active", deliveries: 0, satisfaction: 100 },
+  { id: 3, name: "BOCAO Kitchen Miraflores", email: "miraflores@bocao.pe", role: "kitchen", plan: "--", status: "active", deliveries: 0, satisfaction: 92 },
+  { id: 4, name: "Ana Lopez", email: "ana@email.com", role: "customer", plan: "Basico", status: "active", deliveries: 12, satisfaction: 88 },
 ];
 
 const managementKitchens = [
-  { name: "Dark Kitchen Norte", capacity: 100, utilized: 78, orders: 245, efficiency: 94, rating: 4.8 },
-  { name: "Dark Kitchen Centro", capacity: 100, utilized: 92, orders: 289, efficiency: 91, rating: 4.6 },
-  { name: "Dark Kitchen Sur", capacity: 100, utilized: 75, orders: 198, efficiency: 96, rating: 4.9 },
+  { name: "BOCAO Kitchen Miraflores", capacity: 120, utilized: 98, orders: 142, efficiency: 94, rating: 4.8 },
+  { name: "BOCAO Kitchen Surco", capacity: 100, utilized: 82, orders: 118, efficiency: 91, rating: 4.5 },
+  { name: "BOCAO Kitchen Barranco", capacity: 80, utilized: 65, orders: 87, efficiency: 88, rating: 4.2 },
 ];
 
 function priorityBadge(priority: string) {
@@ -375,7 +293,7 @@ function MetricCard({ label, value, icon: Icon, tone, description }: MetricCardP
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-sm text-muted-foreground">{label}</div>
-          <div className="mt-3 font-display text-4xl font-extrabold text-primary">{value}</div>
+          <div className={cn("mt-3 font-display text-4xl font-extrabold", tone)}>{value}</div>
           {description ? <p className="mt-3 text-sm text-muted-foreground">{description}</p> : null}
         </div>
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary/70">
@@ -388,6 +306,12 @@ function MetricCard({ label, value, icon: Icon, tone, description }: MetricCardP
 
 export function AdminConsolidationPage() {
   const [feedback, setFeedback] = useState("");
+
+  const items = consolidationIngredients;
+
+  const totalPedidos = 245;
+
+  const kitchenAssignments = consolidationKitchens;
 
   return (
     <RoleWorkspace
@@ -416,7 +340,7 @@ export function AdminConsolidationPage() {
       ) : null}
       <div className="grid gap-5 md:grid-cols-4">
         <div className="space-y-3">
-          <MetricCard icon={Database} label="Pedidos procesados" tone="text-primary" value="245" />
+          <MetricCard icon={Database} label="Pedidos procesados" tone="text-primary" value={totalPedidos.toString()} />
           <Badge className="bg-accent-soft text-accent hover:bg-accent-soft">Completado</Badge>
         </div>
         <MetricCard
@@ -424,14 +348,14 @@ export function AdminConsolidationPage() {
           icon={Package}
           label="Insumos consolidados"
           tone="text-accent"
-          value="87"
+          value={items.length.toString()}
         />
         <Card className="p-6 shadow-soft md:col-span-2">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Ultima actualizacion</p>
-              <div className="mt-2 font-display text-2xl font-bold">2026-05-03 14:30</div>
-              <p className="mt-2 text-sm text-muted-foreground">245 pedidos, 1,470 entregas y 5,880 comidas procesadas.</p>
+              <div className="mt-2 font-display text-2xl font-bold">{new Date().toLocaleString()}</div>
+              <p className="mt-2 text-sm text-muted-foreground">{totalPedidos} pedidos, {totalPedidos * 6} entregas y {totalPedidos * 24} comidas procesadas.</p>
             </div>
             <div className="rounded-2xl bg-gradient-hero p-4 text-primary-foreground shadow-elegant">
               <Activity className="h-8 w-8" />
@@ -447,7 +371,7 @@ export function AdminConsolidationPage() {
               <h3 className="font-display text-lg font-bold">Lista consolidada de insumos</h3>
               <p className="mt-1 text-sm text-muted-foreground">Prioriza compras segun volumen, pedidos afectados y proveedores activos.</p>
             </div>
-            <Badge variant="secondary">87 items</Badge>
+            <Badge variant="secondary">{items.length} items</Badge>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -461,7 +385,7 @@ export function AdminConsolidationPage() {
                 </tr>
               </thead>
               <tbody>
-                {consolidationIngredients.map((item) => (
+                {items.map((item) => (
                   <tr key={item.name} className="border-t border-border align-top">
                     <td className="px-5 py-4 font-medium">{item.name}</td>
                     <td className="px-5 py-4">
@@ -481,7 +405,7 @@ export function AdminConsolidationPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Asignacion por cocina</h3>
             <div className="mt-5 space-y-4">
-              {consolidationKitchens.map((kitchen) => {
+              {kitchenAssignments.map((kitchen) => {
                 const usage = (kitchen.assigned / kitchen.capacity) * 100;
 
                 return (
@@ -508,7 +432,7 @@ export function AdminConsolidationPage() {
             <div className="mt-4 space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-primary-foreground/80">Suscripciones activas</span>
-                <span>245</span>
+                <span>{totalPedidos}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-primary-foreground/80">Entregas programadas</span>
@@ -531,6 +455,14 @@ export function AdminLogisticsPage() {
   const [mapRoute, setMapRoute] = useState<(typeof logisticsRoutes)[number] | null>(null);
   const [detailRoute, setDetailRoute] = useState<(typeof logisticsRoutes)[number] | null>(null);
 
+  const routes = logisticsRoutes;
+
+  const totalDeliveries = routes.reduce((s, r) => s + r.deliveries, 0);
+  const totalCompleted = routes.reduce((s, r) => s + r.completed, 0);
+  const activeRoutes = routes.filter((r) => r.status === "en_ruta").length;
+  const routeEfficiency = totalDeliveries > 0 ? Math.round((totalCompleted / totalDeliveries) * 100) : 94;
+  const activeIncidents = 2;
+
   return (
     <RoleWorkspace
       roleTitle="Administrador"
@@ -548,10 +480,10 @@ export function AdminLogisticsPage() {
       ) : null}
       <div className="grid gap-5 md:grid-cols-4">
         {[
-          { label: "Rutas activas", value: "4", icon: Truck, tone: "text-primary" },
-          { label: "Entregas completadas", value: "58/93", icon: MapPin, tone: "text-accent" },
-          { label: "Entregas pendientes", value: "35", icon: Clock, tone: "text-warning" },
-          { label: "En ruta ahora", value: "2", icon: Navigation, tone: "text-primary" },
+          { label: "Rutas activas", value: routes.length.toString(), icon: Truck, tone: "text-primary" },
+          { label: "Entregas completadas", value: `${totalCompleted}/${totalDeliveries}`, icon: MapPin, tone: "text-accent" },
+          { label: "Entregas pendientes", value: (totalDeliveries - totalCompleted).toString(), icon: Clock, tone: "text-warning" },
+          { label: "En ruta ahora", value: activeRoutes.toString(), icon: Navigation, tone: "text-primary" },
         ].map((stat) => {
           const Icon = stat.icon;
           return <MetricCard key={stat.label} icon={Icon} label={stat.label} tone={stat.tone} value={stat.value} />;
@@ -560,7 +492,7 @@ export function AdminLogisticsPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          {logisticsRoutes.map((route) => {
+          {routes.map((route) => {
             const progress = (route.completed / route.deliveries) * 100;
 
             return (
@@ -631,7 +563,7 @@ export function AdminLogisticsPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Mapa de rutas</h3>
             <div className="mt-4 space-y-2">
-              {logisticsRoutes.map((r) => (
+              {routes.map((r) => (
                 <button
                   key={r.id}
                   className="flex w-full items-center gap-3 rounded-xl border border-border bg-secondary/40 p-3 text-left transition-smooth hover:border-primary/30 hover:bg-secondary"
@@ -665,18 +597,20 @@ export function AdminLogisticsPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Estadisticas de hoy</h3>
             <div className="mt-4 space-y-4 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">Tiempo promedio</span><span>8.5 min</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Eficiencia de ruta</span><span className="text-accent">94%</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Incidencias</span><span className="text-warning">2</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Tiempo promedio</span><span>TODO</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Eficiencia de ruta</span><span className="text-accent">{routeEfficiency}%</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Incidencias</span><span className="text-warning">{activeIncidents}</span></div>
             </div>
           </Card>
 
           <Card className="bg-gradient-hero p-6 text-primary-foreground shadow-elegant">
             <h3 className="font-display text-lg font-bold">Resumen operativo</h3>
             <div className="mt-4 space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Rutas programadas</span><span>4</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Kilometros recorridos</span><span>127 km</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Satisfaccion cliente</span><span>98%</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Rutas programadas</span><span>{routes.length}</span></div>
+              {/* TODO: requiere endpoint de analytics */}
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Kilometros recorridos</span><span>TODO</span></div>
+              {/* TODO: requiere endpoint de analytics */}
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Satisfaccion cliente</span><span>TODO</span></div>
             </div>
           </Card>
         </div>
@@ -831,8 +765,44 @@ export function AdminLogisticsPage() {
 
 export function AdminIncidentsPage() {
   const [incidentList, setIncidentList] = useState(incidents);
+
   const active = incidentList.filter((i) => i.status === "en_proceso");
   const resolved = incidentList.filter((i) => i.status === "resuelto");
+  const nonCompletedRoutes = ["RUTA-001", "RUTA-003"];
+  const kitchenSelectOptions = [
+    { id: "1", nombre: "BOCAO Kitchen Miraflores" },
+    { id: "2", nombre: "BOCAO Kitchen Surco" },
+    { id: "3", nombre: "BOCAO Kitchen Barranco" },
+  ];
+
+  function categorizarIncidencia(inc: Incident): string {
+    const t = inc.title.toLowerCase();
+    if (t.includes("retraso") || t.includes("cocina") || t.includes("dark kitchen")) return "Retraso cocina";
+    if (t.includes("vehiculo") || t.includes("ruta") || t.includes("repartidor") || t.includes("logistic")) return "Logistica";
+    if (t.includes("ingrediente") || t.includes("faltante") || t.includes("proveedor") || t.includes("salmon") || t.includes("pollo") || t.includes("insumo")) return "Ingredientes";
+    if (t.includes("cliente") || t.includes("entrega")) return "Cliente";
+    return "Otros";
+  }
+
+  const tiposIncidencia: { type: string; count: number; tone: string }[] = (() => {
+    const groups: Record<string, number> = {};
+    const tones: Record<string, string> = {
+      "Retraso cocina": "bg-primary",
+      "Logistica": "bg-accent",
+      "Ingredientes": "bg-warning",
+      "Cliente": "bg-secondary-foreground",
+      "Otros": "bg-muted-foreground",
+    };
+    incidentList.forEach((inc) => {
+      const tipo = categorizarIncidencia(inc);
+      groups[tipo] = (groups[tipo] || 0) + 1;
+    });
+    return Object.entries(groups).map(([type, count]) => ({
+      type,
+      count,
+      tone: tones[type] ?? "bg-muted-foreground",
+    }));
+  })();
 
   const [modal, setModal] = useState<{ type: "new" | "resolve" | "comment" | "detail" | "notify" | "reprogramar" | "contactar" | null; incidentId?: string }>({ type: null });
   const [commentText, setCommentText] = useState("");
@@ -1005,12 +975,7 @@ export function AdminIncidentsPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Incidencias por tipo</h3>
             <div className="mt-4 space-y-3 text-sm">
-              {[
-                { type: "Retraso cocina", count: 1, tone: "bg-primary" },
-                { type: "Logistica", count: 1, tone: "bg-accent" },
-                { type: "Ingredientes", count: 1, tone: "bg-warning" },
-                { type: "Cliente", count: 1, tone: "bg-secondary-foreground" },
-              ].map((item) => (
+              {tiposIncidencia.map((item) => (
                 <div key={item.type} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className={cn("h-3 w-3 rounded-full", item.tone)} />
@@ -1025,9 +990,31 @@ export function AdminIncidentsPage() {
           <Card className="bg-gradient-hero p-6 text-primary-foreground shadow-elegant">
             <h3 className="font-display text-lg font-bold">Tiempo de resolucion</h3>
             <div className="mt-4 space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Promedio</span><span>45 min</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Mas rapido</span><span>15 min</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Tasa de resolucion</span><span>50%</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Promedio</span><span>{
+                (() => {
+                  const resolvedTimes = incidentList
+                    .filter((i) => i.status === "resuelto" && i.resolvedAt)
+                    .map((i) => new Date(i.resolvedAt!).getTime() - new Date(i.createdAt).getTime());
+                  return resolvedTimes.length > 0
+                    ? Math.round(resolvedTimes.reduce((a, b) => a + b, 0) / resolvedTimes.length / 60000) + " min"
+                    : "TODO";
+                })()
+              }</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Mas rapido</span><span>{
+                (() => {
+                  const resolvedTimes = incidentList
+                    .filter((i) => i.status === "resuelto" && i.resolvedAt)
+                    .map((i) => new Date(i.resolvedAt!).getTime() - new Date(i.createdAt).getTime());
+                  return resolvedTimes.length > 0
+                    ? Math.round(Math.min(...resolvedTimes) / 60000) + " min"
+                    : "TODO";
+                })()
+              }</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Tasa de resolucion</span><span>{
+                incidentList.length > 0
+                  ? Math.round((resolved.length / incidentList.length) * 100) + "%"
+                  : "50%"
+              }</span></div>
             </div>
           </Card>
         </div>
@@ -1073,9 +1060,9 @@ export function AdminIncidentsPage() {
                       <label className="text-sm font-medium">Cocina involucrada</label>
                       <select className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={newForm.kitchen} onChange={(e) => setNewForm((f) => ({ ...f, kitchen: e.target.value }))}>
                         <option value="">Ninguna</option>
-                        <option value="Dark Kitchen Norte">Dark Kitchen Norte</option>
-                        <option value="Dark Kitchen Centro">Dark Kitchen Centro</option>
-                        <option value="Dark Kitchen Sur">Dark Kitchen Sur</option>
+                        {kitchenSelectOptions.map((k) => (
+                          <option key={k.id} value={k.nombre}>{k.nombre}</option>
+                        ))}
                       </select>
                     </div>
                     <Button variant="hero" className="w-full" onClick={handleCreateIncident}>Crear incidencia</Button>
@@ -1189,7 +1176,7 @@ export function AdminIncidentsPage() {
                 <div className="overflow-y-auto p-6">
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">Selecciona las rutas a reprogramar:</p>
-                    {["RUTA-001", "RUTA-003"].map((r) => (
+                    {(nonCompletedRoutes.length > 0 ? nonCompletedRoutes : ["RUTA-001", "RUTA-003"]).map((r) => (
                       <label key={r} className="flex items-center gap-3 rounded-xl border border-border bg-secondary/40 p-3 cursor-pointer">
                         <input type="checkbox" className="h-4 w-4" defaultChecked />
                         <div>
@@ -1216,9 +1203,9 @@ export function AdminIncidentsPage() {
                   <div className="space-y-4">
                     <select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" defaultValue="">
                       <option value="" disabled>Selecciona una cocina</option>
-                      <option>Dark Kitchen Norte</option>
-                      <option>Dark Kitchen Centro</option>
-                      <option>Dark Kitchen Sur</option>
+                      {kitchenSelectOptions.map((k) => (
+                        <option key={k.id}>{k.nombre}</option>
+                      ))}
                     </select>
                     <Input placeholder="Asunto del mensaje" />
                     <Input placeholder="Mensaje para la cocina" />
@@ -1236,23 +1223,42 @@ export function AdminIncidentsPage() {
 }
 
 export function AdminUsersPage() {
-  const [userList, setUserList] = useState(managementUsers);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", role: "customer", plan: "Estandar", status: "active" });
 
+  const userList = managementUsers;
+
+  const kitchenList = managementKitchens;
+
+  const planPrices: Record<string, number> = { "Básico": 299, "Basico": 299, "Estándar": 449, "Estandar": 449, "Premium": 699 };
+
+  const ingresosMes = userList
+    .filter((u) => u.status === "active" || u.status === "activo")
+    .reduce((sum, u) => sum + (planPrices[u.plan] ?? 0), 0);
+
+  const pedidosTotales = userList.reduce((sum, u) => sum + u.deliveries, 0);
+
+  const planDistribution = useMemo(() => {
+    const groups: Record<string, number> = {};
+    userList.forEach((u) => {
+      if (u.plan && u.plan !== "--") {
+        groups[u.plan] = (groups[u.plan] || 0) + 1;
+      }
+    });
+    const total = Object.values(groups).reduce((a, b) => a + b, 0);
+    const colors: Record<string, string> = { "Básico": "bg-accent", "Basico": "bg-accent", "Estándar": "bg-primary", "Estandar": "bg-primary", "Premium": "bg-warning" };
+    return Object.entries(groups).map(([plan, count]) => ({
+      plan,
+      count,
+      percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+      color: colors[plan] ?? "bg-secondary",
+    }));
+  }, [userList]);
+
+  const activeCount = userList.filter((u) => u.status === "active" || u.status === "activo").length;
+
   function handleCreate() {
     if (!form.name.trim() || !form.email.trim()) return;
-    const newUser = {
-      id: userList.length + 1,
-      name: form.name,
-      email: form.email,
-      role: form.role,
-      plan: form.role === "customer" ? form.plan : "--",
-      status: form.status,
-      deliveries: 0,
-      satisfaction: 100,
-    };
-    setUserList((prev) => [newUser, ...prev]);
     setShowModal(false);
     setForm({ name: "", email: "", role: "customer", plan: "Estandar", status: "active" });
   }
@@ -1268,11 +1274,11 @@ export function AdminUsersPage() {
       <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-6">
         {[
           { label: "Usuarios totales", value: userList.length.toString(), icon: Users, tone: "text-primary" },
-          { label: "Clientes", value: userList.filter((u) => u.role === "customer").length.toString(), icon: Users, tone: "text-accent" },
-          { label: "Kitchen", value: userList.filter((u) => u.role === "kitchen").length.toString(), icon: Building2, tone: "text-warning" },
-          { label: "Suscripciones", value: userList.filter((u) => u.status === "active").length.toString(), icon: TrendingUp, tone: "text-accent" },
-          { label: "Ingresos mes", value: "S/ 104k", icon: DollarSign, tone: "text-primary" },
-          { label: "Pedidos totales", value: "1,470", icon: Package, tone: "text-primary" },
+          { label: "Clientes", value: userList.filter((u) => u.role === "customer" || u.role === "cliente").length.toString(), icon: Users, tone: "text-accent" },
+          { label: "Kitchen", value: userList.filter((u) => u.role === "kitchen" || u.role === "cocina").length.toString(), icon: Building2, tone: "text-warning" },
+          { label: "Suscripciones", value: activeCount.toString(), icon: TrendingUp, tone: "text-accent" },
+          { label: "Ingresos mes", value: `S/ ${(ingresosMes / 1000).toFixed(1)}k`, icon: DollarSign, tone: "text-primary" },
+          { label: "Pedidos totales", value: pedidosTotales.toLocaleString(), icon: Package, tone: "text-primary" },
         ].map((stat) => {
           const Icon = stat.icon;
           return <MetricCard key={stat.label} icon={Icon} label={stat.label} tone={stat.tone} value={stat.value} />;
@@ -1306,7 +1312,7 @@ export function AdminUsersPage() {
                     <td className="px-5 py-4">
                       {user.role === "admin" ? (
                         <Badge className="bg-primary text-primary-foreground hover:bg-primary">Admin</Badge>
-                      ) : user.role === "kitchen" ? (
+                      ) : user.role === "kitchen" || user.role === "cocina" ? (
                         <Badge className="bg-warning/15 text-warning hover:bg-warning/15">Kitchen</Badge>
                       ) : (
                         <Badge className="bg-accent-soft text-accent hover:bg-accent-soft">Cliente</Badge>
@@ -1315,7 +1321,7 @@ export function AdminUsersPage() {
                     <td className="px-5 py-4"><span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold">{user.plan}</span></td>
                     <td className="px-5 py-4 text-muted-foreground">{user.deliveries}</td>
                     <td className="px-5 py-4">
-                      {user.status === "active" ? (
+                      {user.status === "active" || user.status === "activo" ? (
                         <Badge className="bg-accent-soft text-accent hover:bg-accent-soft">Activo</Badge>
                       ) : (
                         <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">Pausado</Badge>
@@ -1331,7 +1337,7 @@ export function AdminUsersPage() {
         <Card className="p-6 shadow-soft">
           <h3 className="font-display text-lg font-bold">Rendimiento de dark kitchens</h3>
           <div className="mt-5 space-y-4">
-            {managementKitchens.map((kitchen) => {
+            {kitchenList.map((kitchen) => {
               const utilization = (kitchen.utilized / kitchen.capacity) * 100;
 
               return (
@@ -1374,11 +1380,7 @@ export function AdminUsersPage() {
         <Card className="p-6 shadow-soft">
           <h3 className="font-display text-lg font-bold">Distribucion de planes</h3>
           <div className="mt-5 space-y-4">
-            {[
-              { plan: "Basico", count: 68, percentage: 28, color: "bg-accent" },
-              { plan: "Estandar", count: 142, percentage: 58, color: "bg-primary" },
-              { plan: "Premium", count: 35, percentage: 14, color: "bg-warning" },
-            ].map((item) => (
+            {planDistribution.length > 0 ? planDistribution.map((item) => (
               <div key={item.plan}>
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{item.plan}</span>
@@ -1391,17 +1393,38 @@ export function AdminUsersPage() {
                   <div className={cn("h-full rounded-full", item.color)} style={{ width: `${item.percentage}%` }} />
                 </div>
               </div>
-            ))}
+            )) : (
+              <>
+                {[
+                  { plan: "Basico", count: 68, percentage: 28, color: "bg-accent" },
+                  { plan: "Estandar", count: 142, percentage: 58, color: "bg-primary" },
+                  { plan: "Premium", count: 35, percentage: 14, color: "bg-warning" },
+                ].map((item) => (
+                  <div key={item.plan}>
+                    <div className="mb-2 flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">{item.plan}</span>
+                      <span>
+                        <span className="font-medium text-foreground">{item.count}</span>
+                        <span className="text-muted-foreground"> ({item.percentage}%)</span>
+                      </span>
+                    </div>
+                    <div className="h-3 overflow-hidden rounded-full bg-secondary">
+                      <div className={cn("h-full rounded-full", item.color)} style={{ width: `${item.percentage}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </Card>
 
         <Card className="bg-gradient-hero p-6 text-primary-foreground shadow-elegant">
           <h3 className="font-display text-lg font-bold">Resumen financiero</h3>
           <div className="mt-5 space-y-4 text-sm">
-            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Ingresos mensuales</span><span className="text-lg">S/ 104.1k</span></div>
-            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Ticket promedio</span><span className="text-lg">S/ 449</span></div>
-            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Retencion</span><span className="text-lg">94.7%</span></div>
-            <div className="flex justify-between"><span className="text-primary-foreground/80">Crecimiento mensual</span><span className="text-lg text-primary-foreground">+12.5%</span></div>
+            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Ingresos mensuales</span><span className="text-lg">S/ {(ingresosMes / 1000).toFixed(1)}k</span></div>
+            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Ticket promedio</span><span className="text-lg">S/ {activeCount > 0 ? Math.round(ingresosMes / activeCount) : "TODO"}</span></div>
+            <div className="flex justify-between border-b border-white/20 pb-3"><span className="text-primary-foreground/80">Retencion</span><span className="text-lg">{userList.length > 0 ? Math.round((activeCount / userList.length) * 100) : 0}%</span></div>
+            <div className="flex justify-between"><span className="text-primary-foreground/80">Crecimiento mensual</span><span className="text-lg text-primary-foreground">TODO</span></div>
           </div>
         </Card>
       </div>
