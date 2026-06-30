@@ -17,9 +17,7 @@ export function ProtectedRoute({ roles, children }: ProtectedRouteProps) {
   const { isHydrated, session } = useAuth();
 
   useEffect(() => {
-    if (!isHydrated) {
-      return;
-    }
+    if (!isHydrated) return;
 
     if (!session) {
       router.replace(`/auth?next=${encodeURIComponent(pathname)}`);

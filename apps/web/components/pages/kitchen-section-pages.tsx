@@ -45,157 +45,6 @@ const kitchenLinks: SidebarLink[] = [
   { href: "/cocina/lotes", label: "Estado de lotes", icon: "list-checks" },
 ];
 
-const kitchenBatches = [
-  {
-    id: "LOTE-001",
-    route: "RUTA-001",
-    zone: "San Isidro / Miraflores",
-    orders: 24,
-    deadline: "08:00 AM",
-    priority: "high",
-    status: "assigned",
-    profiles: ["Vegetariano", "Sin gluten", "Alto en proteina"],
-  },
-  {
-    id: "LOTE-002",
-    route: "RUTA-002",
-    zone: "Surco / La Molina",
-    orders: 28,
-    deadline: "08:30 AM",
-    priority: "high",
-    status: "assigned",
-    profiles: ["Bajo en carbohidratos", "Vegano", "Sin lactosa"],
-  },
-  {
-    id: "LOTE-003",
-    route: "RUTA-003",
-    zone: "Barranco / Chorrillos",
-    orders: 19,
-    deadline: "09:00 AM",
-    priority: "medium",
-    status: "assigned",
-    profiles: ["Estandar", "Alto en fibra"],
-  },
-  {
-    id: "LOTE-004",
-    route: "RUTA-004",
-    zone: "Jesus Maria / Lince",
-    orders: 22,
-    deadline: "09:30 AM",
-    priority: "medium",
-    status: "pending",
-    profiles: ["Vegetariano", "Bajo en sodio"],
-  },
-];
-
-const productionOrders = [
-  {
-    id: "#BOCAO-001",
-    customer: "Juan Perez",
-    address: "Av. Pardo 456, Dpto 301, Miraflores",
-    profile: { calories: 2100, protein: 140, carbs: 210, fats: 70, restrictions: ["Sin lactosa"], allergies: "Ninguna" },
-    meals: [
-      {
-        name: "Desayuno",
-        recipe: "Avena con frutos rojos",
-        ingredients: [
-          { item: "Avena integral", quantity: "80g" },
-          { item: "Leche de almendras", quantity: "200ml" },
-          { item: "Arandanos", quantity: "50g" },
-          { item: "Fresas", quantity: "50g" },
-        ],
-        calories: 350,
-        notes: "Sin lacteos por restriccion.",
-      },
-      {
-        name: "Almuerzo",
-        recipe: "Bowl de quinua con verduras",
-        ingredients: [
-          { item: "Quinua cocida", quantity: "150g" },
-          { item: "Brocoli al vapor", quantity: "100g" },
-          { item: "Garbanzos", quantity: "80g" },
-          { item: "Aderezo de limon", quantity: "20ml" },
-        ],
-        calories: 520,
-        notes: "Vegetariano y sin lacteos.",
-      },
-    ],
-  },
-  {
-    id: "#BOCAO-002",
-    customer: "Carlos Garcia",
-    address: "Calle Los Pinos 789, San Isidro",
-    profile: { calories: 2000, protein: 110, carbs: 200, fats: 70, restrictions: ["Alto en proteina"], allergies: "Ninguna" },
-    meals: [
-      {
-        name: "Desayuno",
-        recipe: "Huevos revueltos con palta",
-        ingredients: [
-          { item: "Huevos organicos", quantity: "3 unidades" },
-          { item: "Palta hass", quantity: "1/2 unidad" },
-          { item: "Pan integral", quantity: "2 rebanadas" },
-          { item: "Tomate", quantity: "50g" },
-        ],
-        calories: 420,
-        notes: "Priorizar coccion completa.",
-      },
-      {
-        name: "Almuerzo",
-        recipe: "Pollo grillado con ensalada",
-        ingredients: [
-          { item: "Pechuga de pollo", quantity: "180g" },
-          { item: "Lechuga romana", quantity: "100g" },
-          { item: "Pepino", quantity: "50g" },
-          { item: "Tomate cherry", quantity: "60g" },
-        ],
-        calories: 480,
-        notes: "Mantener sello de alto contenido proteico.",
-      },
-    ],
-  },
-];
-
-const labelingRoutes = [
-  { id: "RUTA-001", zone: "San Isidro / Miraflores", orders: 24, batch: "LOTE-001", status: "ready" },
-  { id: "RUTA-002", zone: "Surco / La Molina", orders: 28, batch: "LOTE-002", status: "printing" },
-  { id: "RUTA-003", zone: "Barranco / Chorrillos", orders: 19, batch: "LOTE-003", status: "pending" },
-  { id: "RUTA-004", zone: "Jesus Maria / Lince", orders: 22, batch: "LOTE-004", status: "pending" },
-];
-
-const sampleLabels = [
-  {
-    orderId: "#BOCAO-001",
-    customer: "Juan Perez",
-    address: "Av. Pardo 456, Dpto 301, Miraflores",
-    phone: "+51 999 888 777",
-    route: "RUTA-001",
-    sequence: "001/024",
-    deliveryTime: "6:00 - 8:00 AM",
-    meals: ["Desayuno", "Almuerzo", "Merienda", "Cena"],
-    restrictions: ["Sin lactosa"],
-    allergies: "Ninguna",
-  },
-  {
-    orderId: "#BOCAO-002",
-    customer: "Carlos Garcia",
-    address: "Calle Los Pinos 789, San Isidro",
-    phone: "+51 999 666 555",
-    route: "RUTA-001",
-    sequence: "002/024",
-    deliveryTime: "6:00 - 8:00 AM",
-    meals: ["Desayuno", "Almuerzo", "Merienda", "Cena"],
-    restrictions: ["Alto en proteina"],
-    allergies: "Ninguna",
-  },
-];
-
-const lotes = [
-  { id: "LOTE-001", route: "RUTA-001", zone: "San Isidro / Miraflores", orders: 24, completed: 18, inProgress: 4, pending: 2, status: "assigned", estimatedCompletion: "08:00 AM", deadline: "08:00 AM" },
-  { id: "LOTE-002", route: "RUTA-002", zone: "Surco / La Molina", orders: 28, completed: 28, inProgress: 0, pending: 0, status: "completed", estimatedCompletion: "08:30 AM", deadline: "08:30 AM" },
-  { id: "LOTE-003", route: "RUTA-003", zone: "Barranco / Chorrillos", orders: 19, completed: 12, inProgress: 5, pending: 2, status: "assigned", estimatedCompletion: "09:00 AM", deadline: "09:00 AM" },
-  { id: "LOTE-004", route: "RUTA-004", zone: "Jesus Maria / Lince", orders: 22, completed: 0, inProgress: 0, pending: 22, status: "pending", estimatedCompletion: "09:30 AM", deadline: "09:30 AM" },
-];
-
 function batchPriorityBadge(priority: string) {
   return priority === "high" ? (
     <Badge className="bg-primary text-primary-foreground hover:bg-primary">Alta prioridad</Badge>
@@ -220,7 +69,7 @@ function MetricCard({ label, value, icon: Icon, tone }: MetricCardProps) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-sm text-muted-foreground">{label}</div>
-          <div className="mt-3 font-display text-4xl font-extrabold text-primary">{value}</div>
+          <div className={cn("mt-3 font-display text-4xl font-extrabold", tone)}>{value}</div>
         </div>
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary/70">
           <Icon className={cn("h-5 w-5", tone)} />
@@ -230,8 +79,64 @@ function MetricCard({ label, value, icon: Icon, tone }: MetricCardProps) {
   );
 }
 
+const kitchenBatches = [
+  { id: "LOTE-001", route: "RUTA-001", zone: "San Isidro / Miraflores", orders: 18, deadline: "10:00 AM", priority: "high", status: "assigned", profiles: ["Estandar", "Premium", "Vegetariano"], completed: 12, inProgress: 4, pending: 2 },
+  { id: "LOTE-002", route: "RUTA-002", zone: "Surco / La Molina", orders: 22, deadline: "09:30 AM", priority: "medium", status: "assigned", profiles: ["Estandar", "Basico"], completed: 8, inProgress: 6, pending: 8 },
+  { id: "LOTE-003", route: "RUTA-003", zone: "Barranco / Chorrillos", orders: 16, deadline: "11:00 AM", priority: "high", status: "assigned", profiles: ["Estandar", "Premium"], completed: 5, inProgress: 5, pending: 6 },
+  { id: "LOTE-004", route: "RUTA-004", zone: "Jesus Maria / Lince", orders: 20, deadline: "10:30 AM", priority: "medium", status: "pending", profiles: ["Estandar", "Basico", "Vegetariano"], completed: 0, inProgress: 0, pending: 20 },
+];
+
+const productionOrdersData = [
+  {
+    id: "PED-001",
+    customer: "Juan Perez",
+    address: "Av. Pardo 456, Dpto 301, Miraflores",
+    profile: { calories: 2100, protein: 140, carbs: 210, fats: 70, restrictions: ["Sin lactosa", "Bajo en sodio"], allergies: "Lacteos" },
+    meals: [
+      { name: "Bowl verde con pollo cítrico", recipe: "Pollo grillado + quinua + palta + vegetales verdes", ingredients: [{ item: "Pechuga de pollo", quantity: "200g" }, { item: "Quinua cocida", quantity: "150g" }, { item: "Palta", quantity: "1/2 unidad" }, { item: "Mix verde", quantity: "100g" }, { item: "Aderezo cítrico", quantity: "30ml" }], calories: 520, notes: "Verificar ausencia de lacteos en aderezo. Usar leche de coco como sustituto si es necesario." },
+      { name: "Crema de zapallo con tostadas", recipe: "Zapallo loche + cebolla + ajo + caldo de vegetales", ingredients: [{ item: "Zapallo loche", quantity: "300g" }, { item: "Cebolla", quantity: "50g" }, { item: "Ajo", quantity: "2 dientes" }, { item: "Caldo vegetal", quantity: "200ml" }, { item: "Pan integral", quantity: "2 rebanadas" }, { item: "Aceite de oliva", quantity: "10ml" }], calories: 380, notes: "Tostadas sin mantequilla." },
+    ],
+  },
+  {
+    id: "PED-002",
+    customer: "Ana Lopez",
+    address: "Jr. Salaverry 890, Jesus Maria",
+    profile: { calories: 1800, protein: 120, carbs: 180, fats: 60, restrictions: ["Vegano", "Sin gluten"], allergies: "Gluten, Mariscos" },
+    meals: [
+      { name: "Curry thai de garbanzos", recipe: "Garbanzos + leche de coco + verduras + especias thai", ingredients: [{ item: "Garbanzos cocidos", quantity: "200g" }, { item: "Leche de coco", quantity: "150ml" }, { item: "Pimiento rojo", quantity: "80g" }, { item: "Curry thai", quantity: "15g" }, { item: "Arroz jazmin", quantity: "150g" }], calories: 480, notes: "Confirmar que el curry thai no contenga trazas de gluten ni productos animales." },
+    ],
+  },
+];
+
+const labelingRoutesData = [
+  { id: "RUTA-001", zone: "San Isidro / Miraflores", orders: 18, batch: "LOTE-001", status: "ready" },
+  { id: "RUTA-002", zone: "Surco / La Molina", orders: 22, batch: "LOTE-002", status: "printing" },
+  { id: "RUTA-003", zone: "Barranco / Chorrillos", orders: 16, batch: "LOTE-003", status: "pending" },
+  { id: "RUTA-004", zone: "Jesus Maria / Lince", orders: 20, batch: "LOTE-004", status: "pending" },
+];
+
+const sampleLabelsData = [
+  { orderId: "PED-001", customer: "Juan Perez", address: "Av. Pardo 456, Dpto 301, Miraflores", phone: "+51 999 111 222", route: "RUTA-001", sequence: 14, deliveryTime: "9:00 - 12:00 AM", meals: ["Bowl verde con pollo", "Crema de zapallo"], restrictions: ["Sin lactosa", "Bajo en sodio"], allergies: "Lacteos" },
+  { orderId: "PED-002", customer: "Ana Lopez", address: "Jr. Salaverry 890, Jesus Maria", phone: "+51 988 777 666", route: "RUTA-004", sequence: 4, deliveryTime: "9:00 - 12:00 AM", meals: ["Curry thai de garbanzos"], restrictions: ["Vegano", "Sin gluten"], allergies: "Gluten, Mariscos" },
+];
+
+const lotesData = [
+  { id: "LOTE-001", route: "RUTA-001", zone: "San Isidro / Miraflores", orders: 18, completed: 12, inProgress: 4, pending: 2, status: "assigned", estimatedCompletion: "10:45 AM", deadline: "10:00 AM" },
+  { id: "LOTE-002", route: "RUTA-002", zone: "Surco / La Molina", orders: 22, completed: 22, inProgress: 0, pending: 0, status: "completed", estimatedCompletion: "09:15 AM", deadline: "09:30 AM" },
+  { id: "LOTE-003", route: "RUTA-003", zone: "Barranco / Chorrillos", orders: 16, completed: 5, inProgress: 5, pending: 6, status: "assigned", estimatedCompletion: "11:30 AM", deadline: "11:00 AM" },
+  { id: "LOTE-004", route: "RUTA-004", zone: "Jesus Maria / Lince", orders: 20, completed: 0, inProgress: 0, pending: 20, status: "pending", estimatedCompletion: "12:00 PM", deadline: "10:30 AM" },
+];
 export function KitchenOrdersPage() {
   const [feedback, setFeedback] = useState("");
+
+  const batches = kitchenBatches;
+
+  const totalPedidos = batches.reduce((s, b) => s + b.orders, 0);
+  const enProgreso = batches.reduce((s, b) => s + b.inProgress, 0);
+  const pendientes = batches.reduce((s, b) => s + b.pending, 0);
+  const completados = batches.reduce((s, b) => s + b.completed, 0);
+  const uniqueRoutes = [...new Set(batches.map((b) => b.route))];
+  const uniqueProfiles = [...new Set(batches.flatMap((b) => b.profiles))];
 
   return (
     <RoleWorkspace
@@ -250,10 +155,10 @@ export function KitchenOrdersPage() {
       ) : null}
       <div className="grid gap-5 md:grid-cols-4">
         {[
-          { label: "Pedidos totales", value: "93", icon: Package, tone: "text-primary" },
-          { label: "En progreso", value: "73", icon: Clock, tone: "text-warning" },
-          { label: "Pendientes", value: "20", icon: Users, tone: "text-primary" },
-          { label: "Completados hoy", value: "0", icon: CheckCircle, tone: "text-accent" },
+          { label: "Pedidos totales", value: totalPedidos.toString(), icon: Package, tone: "text-primary" },
+          { label: "En progreso", value: enProgreso.toString(), icon: Clock, tone: "text-warning" },
+          { label: "Pendientes", value: pendientes.toString(), icon: Users, tone: "text-primary" },
+          { label: "Completados hoy", value: completados.toString(), icon: CheckCircle, tone: "text-accent" },
         ].map((stat) => {
           const Icon = stat.icon;
           return <MetricCard key={stat.label} icon={Icon} label={stat.label} tone={stat.tone} value={stat.value} />;
@@ -262,7 +167,7 @@ export function KitchenOrdersPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          {kitchenBatches.map((batch) => (
+          {batches.map((batch) => (
             <Card key={batch.id} className={cn("p-6 shadow-soft", batch.priority === "high" ? "ring-1 ring-primary/25" : undefined)}>
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
@@ -277,8 +182,8 @@ export function KitchenOrdersPage() {
                     <p className="mt-1 text-sm text-muted-foreground">Ruta {batch.route} · {batch.zone}</p>
                   </div>
                 </div>
-                <Badge className={batch.status === "assigned" ? "bg-primary text-primary-foreground hover:bg-primary" : "bg-secondary text-secondary-foreground hover:bg-secondary"}>
-                  {batch.status === "assigned" ? "Asignado" : "Pendiente"}
+                <Badge className={batch.status === "assigned" ? "bg-primary text-primary-foreground hover:bg-primary" : batch.status === "completed" ? "bg-accent-soft text-accent hover:bg-accent-soft" : "bg-secondary text-secondary-foreground hover:bg-secondary"}>
+                  {batch.status === "assigned" ? "Asignado" : batch.status === "completed" ? "Listo" : "Pendiente"}
                 </Badge>
               </div>
 
@@ -350,18 +255,18 @@ export function KitchenOrdersPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Resumen del dia</h3>
             <div className="mt-4 space-y-4 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">Lotes asignados</span><span>4</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Rutas asociadas</span><span>4</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Perfiles diferentes</span><span>8</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Lotes asignados</span><span>{batches.length}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Rutas asociadas</span><span>{uniqueRoutes.length}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Perfiles diferentes</span><span>{uniqueProfiles.length}</span></div>
             </div>
           </Card>
 
           <Card className="bg-gradient-hero p-6 text-primary-foreground shadow-elegant">
             <h3 className="font-display text-lg font-bold">Estado de cocina</h3>
             <div className="mt-4 space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Capacidad utilizada</span><span>78%</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Capacidad utilizada</span><span>{Math.round(totalPedidos > 0 ? (completados / totalPedidos) * 100 : 0)}%</span></div>
               <div className="flex justify-between"><span className="text-primary-foreground/80">Tiempo promedio por lote</span><span>85 min</span></div>
-              <div className="flex justify-between"><span className="text-primary-foreground/80">Eficiencia</span><span>94%</span></div>
+              <div className="flex justify-between"><span className="text-primary-foreground/80">Eficiencia</span><span>{totalPedidos > 0 ? Math.round((completados / totalPedidos) * 100) : 0}%</span></div>
             </div>
           </Card>
         </div>
@@ -371,6 +276,18 @@ export function KitchenOrdersPage() {
 }
 
 export function KitchenProductionPage() {
+  const activeLot = kitchenBatches[0]
+    ? {
+        id: kitchenBatches[0].id,
+        route: kitchenBatches[0].route,
+        zone: kitchenBatches[0].zone,
+        deadline: kitchenBatches[0].deadline,
+        orders: kitchenBatches[0].orders,
+      }
+    : null;
+
+  const productionOrders = productionOrdersData;
+
   return (
     <RoleWorkspace
       roleTitle="Dark Kitchen"
@@ -382,19 +299,19 @@ export function KitchenProductionPage() {
       <Card className="p-6 shadow-soft">
         <div className="grid gap-4 md:grid-cols-4">
           <div className="rounded-2xl bg-secondary/40 p-4 text-center">
-            <div className="font-display text-3xl font-extrabold text-primary">24</div>
+            <div className="font-display text-3xl font-extrabold text-primary">{activeLot?.orders ?? '-'}</div>
             <div className="mt-1 text-sm text-muted-foreground">Pedidos</div>
           </div>
           <div className="rounded-2xl bg-secondary/40 p-4 text-center">
-            <div className="font-display text-3xl font-extrabold text-primary">RUTA-001</div>
+            <div className="font-display text-3xl font-extrabold text-primary">{activeLot?.route ?? '-'}</div>
             <div className="mt-1 text-sm text-muted-foreground">Ruta</div>
           </div>
           <div className="rounded-2xl bg-secondary/40 p-4 text-center">
-            <div className="font-display text-xl font-extrabold text-primary">San Isidro / Miraflores</div>
+            <div className="font-display text-xl font-extrabold text-primary">{activeLot?.zone ?? '-'}</div>
             <div className="mt-1 text-sm text-muted-foreground">Zona</div>
           </div>
           <div className="rounded-2xl bg-primary p-4 text-center text-primary-foreground">
-            <div className="font-display text-3xl font-extrabold">08:00 AM</div>
+            <div className="font-display text-3xl font-extrabold">{activeLot?.deadline ?? '-'}</div>
             <div className="mt-1 text-sm text-primary-foreground/80">Hora limite</div>
           </div>
         </div>
@@ -494,6 +411,14 @@ export function KitchenProductionPage() {
 export function KitchenLabelingPage() {
   const [feedback, setFeedback] = useState("");
 
+  const labelingRoutes = labelingRoutesData;
+
+  const sampleLabels = sampleLabelsData;
+
+  const printedCount = labelingRoutes.filter((l) => l.status === "ready").reduce((s, l) => s + l.orders, 0);
+  const pendingCount = labelingRoutes.reduce((s, l) => s + l.orders, 0) - printedCount;
+  const processedRoutes = labelingRoutes.filter((l) => l.status === "ready").length;
+
   return (
     <RoleWorkspace
       roleTitle="Dark Kitchen"
@@ -544,7 +469,7 @@ export function KitchenLabelingPage() {
                       <Printer className="h-5 w-5 text-primary" />
                       <div>
                         <div className="text-muted-foreground">Etiquetas a imprimir</div>
-                        <div className="font-display text-2xl font-bold text-primary">{route.orders * 4}</div>
+                        <div className="font-display text-2xl font-bold text-primary">{route.orders * 2}</div>
                       </div>
                     </div>
                   </div>
@@ -626,9 +551,9 @@ export function KitchenLabelingPage() {
           <Card className="p-6 shadow-soft">
             <h3 className="font-display text-lg font-bold">Estadisticas de hoy</h3>
             <div className="mt-4 space-y-4 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">Etiquetas impresas</span><span>0</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Etiquetas pendientes</span><span>284</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Rutas procesadas</span><span>0/3</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Etiquetas impresas</span><span>{printedCount}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Etiquetas pendientes</span><span>{pendingCount}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Rutas procesadas</span><span>{processedRoutes}/{labelingRoutes.length}</span></div>
             </div>
           </Card>
 
@@ -646,7 +571,8 @@ export function KitchenLabelingPage() {
 }
 
 export function KitchenLotsPage() {
-  const [batchList, setBatchList] = useState(lotes);
+  const [batchList, setBatchList] = useState(lotesData);
+
   const [modal, setModal] = useState<{ type: "markAll" | "markOne" | "incident" | "delay" | "schedule" | null; batchId?: string }>({ type: null });
   const [incidentMsg, setIncidentMsg] = useState("");
   const [delayNote, setDelayNote] = useState("");
@@ -664,23 +590,13 @@ export function KitchenLotsPage() {
 
   function handleMarkOne(batchId: string) {
     setBatchList((prev) =>
-      prev.map((b) =>
-        b.id === batchId
-          ? { ...b, status: "completed", completed: b.orders, inProgress: 0, pending: 0 }
-          : b,
-      ),
+      prev.map((b) => (b.id === batchId ? { ...b, status: "completed", completed: b.orders, inProgress: 0, pending: 0 } : b)),
     );
   }
 
   function handleMarkAllReady() {
     setBatchList((prev) =>
-      prev.map((b) => ({
-        ...b,
-        status: "completed",
-        completed: b.orders,
-        inProgress: 0,
-        pending: 0,
-      })),
+      prev.map((b) => ({ ...b, status: "completed", completed: b.orders, inProgress: 0, pending: 0 })),
     );
     closeModal();
   }
@@ -688,11 +604,7 @@ export function KitchenLotsPage() {
   function handleReportDelay(batchId: string) {
     if (!delayNote.trim()) return;
     setBatchList((prev) =>
-      prev.map((b) =>
-        b.id === batchId
-          ? { ...b, status: "delayed" }
-          : b,
-      ),
+      prev.map((b) => (b.id === batchId ? { ...b, status: "delayed" } : b)),
     );
     closeModal();
   }
