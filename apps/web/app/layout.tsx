@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from "next/font/google";
 
-import { PageTransition } from "@/components/layout/page-transition";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { siteAssets } from "@/lib/assets";
 
@@ -39,7 +38,6 @@ export default function RootLayout({
     <html lang="es" className={`${displayFont.variable} ${sansFont.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <AuthProvider>
-          <PageTransition />
           {children}
         </AuthProvider>
       </body>

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Check, Sparkles } from "lucide-react";
 
@@ -62,9 +65,11 @@ export function PlanCard({ plan }: { plan: Plan }) {
 }
 
 export function PlansGrid() {
+  const [plans] = useState<Plan[]>(PLANS);
+
   return (
     <div data-scroll-reveal-stagger className="grid gap-6 md:grid-cols-3">
-      {PLANS.map((plan) => (
+      {plans.map((plan) => (
         <PlanCard key={plan.id} plan={plan} />
       ))}
     </div>

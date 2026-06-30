@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
-  "globalEnv": ["PORT"],
+  "globalEnv": ["PORT", "DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME", "FRONTEND_URL", "JWT_SECRET", "JWT_REFRESH_SECRET", "NODE_ENV"],
   "ui": "tui",
   "tasks": {
     "build": {

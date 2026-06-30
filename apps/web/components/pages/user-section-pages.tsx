@@ -65,12 +65,12 @@ const weeklyMenu = [
   { day: "Dom", meal: "Pasta integral con pesto", kcal: 590, protein: 28, carbs: 64, fats: 22 },
 ];
 
-const orders = [
+const defaultOrders = [
   {
     id: "#BOCAO-1042",
     date: "2026-05-03",
     status: "entregado",
-    plan: "Estandar",
+    plan: "Estándar",
     meals: 14,
     total: "S/ 345.45",
     address: "Av. Pardo 456, Dpto 301, Miraflores",
@@ -84,11 +84,11 @@ const orders = [
     id: "#BOCAO-0987",
     date: "2026-04-26",
     status: "entregado",
-    plan: "Estandar",
+    plan: "Estándar",
     meals: 14,
     total: "S/ 345.45",
-    address: "Av. Pardo 456, Dpto 301, Miraflores",
-    driver: "Maria Gonzalez",
+    address: "Av. Benavides 234, Surco",
+    driver: "Pedro Sanchez",
     route: "RUTA-002",
     lote: "LOTE-002",
     deliveredAt: "9:10 AM",
@@ -98,10 +98,10 @@ const orders = [
     id: "#BOCAO-0932",
     date: "2026-04-19",
     status: "entregado",
-    plan: "Estandar",
+    plan: "Estándar",
     meals: 14,
     total: "S/ 345.45",
-    address: "Av. Pardo 456, Dpto 301, Miraflores",
+    address: "Av. Grau 567, Barranco",
     driver: "Jorge Ramirez",
     route: "RUTA-003",
     lote: "LOTE-003",
@@ -112,10 +112,10 @@ const orders = [
     id: "#BOCAO-0876",
     date: "2026-04-12",
     status: "entregado",
-    plan: "Basico",
+    plan: "Básico",
     meals: 7,
     total: "S/ 208.95",
-    address: "Av. Pardo 456, Dpto 301, Miraflores",
+    address: "Jr. Salaverry 890, Jesús María",
     driver: "Ana Torres",
     route: "RUTA-004",
     lote: "LOTE-004",
@@ -126,7 +126,7 @@ const orders = [
     id: "#BOCAO-0821",
     date: "2026-04-05",
     status: "entregado",
-    plan: "Basico",
+    plan: "Básico",
     meals: 7,
     total: "S/ 208.95",
     address: "Av. Pardo 456, Dpto 301, Miraflores",
@@ -138,7 +138,7 @@ const orders = [
   },
 ];
 
-const nutritionLog = [
+const defaultNutritionLog = [
   { day: "Lun", kcal: 2080, protein: 138, carbs: 210, fats: 68, goal: 2100 },
   { day: "Mar", kcal: 2150, protein: 142, carbs: 218, fats: 72, goal: 2100 },
   { day: "Mie", kcal: 1950, protein: 128, carbs: 196, fats: 62, goal: 2100 },
@@ -180,6 +180,23 @@ function MetricCard({ label, value, icon: Icon, tone, description }: MetricCardP
 export function UserOverviewPage() {
   const [paused, setPaused] = useState(false);
 
+  function handleTogglePause() {
+    setPaused(!paused);
+  }
+
+  const daysRemaining = 5;
+
+  const nextDeliveryDay = "Lun";
+  const nextDeliveryDesc = "9:00 - 12:00 AM";
+
+  const dailyCalories = 2100;
+  const profileObjetivo = "Bajar grasa corporal";
+
+  const progressKcal = 92;
+  const progressProtein = 88;
+  const progressCarbs = 95;
+  const progressFats = 78;
+
   return (
     <RoleWorkspace
       roleTitle="Mi cuenta"
@@ -188,7 +205,7 @@ export function UserOverviewPage() {
       subtitle="Consulta el estado de tu suscripción, el menú de la semana y tu próxima entrega."
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setPaused((v) => !v)}>
+          <Button variant="outline" onClick={handleTogglePause}>
             {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
             {paused ? "Reanudar plan" : "Pausar plan"}
           </Button>
@@ -217,9 +234,9 @@ export function UserOverviewPage() {
       ) : null}
 
       <div className="grid gap-5 md:grid-cols-4">
-        <MetricCard icon={Calendar} label="Días restantes" tone="text-primary" value="5" />
-        <MetricCard icon={Truck} label="Proxima entrega" tone="text-accent" value="Lun" description="9:00 - 12:00 AM" />
-        <MetricCard icon={Flame} label="Calorías diarias" tone="text-primary" value="2 100" description="Objetivo: bajar grasa" />
+        <MetricCard icon={Calendar} label="Días restantes" tone="text-primary" value={String(daysRemaining)} />
+        <MetricCard icon={Truck} label="Proxima entrega" tone="text-accent" value={nextDeliveryDay} description={nextDeliveryDesc} />
+        <MetricCard icon={Flame} label="Calorías diarias" tone="text-primary" value={dailyCalories.toLocaleString()} description={`Objetivo: ${profileObjetivo.toLowerCase()}`} />
         <Card className="p-6 shadow-soft">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -272,30 +289,30 @@ export function UserOverviewPage() {
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Calorías</span>
-                  <span className="font-semibold">92%</span>
+                  <span className="font-semibold">{progressKcal}%</span>
                 </div>
-                <Progress className="mt-2 h-3" value={92} />
+                <Progress className="mt-2 h-3" value={progressKcal} />
               </div>
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Proteínas</span>
-                  <span className="font-semibold">88%</span>
+                  <span className="font-semibold">{progressProtein}%</span>
                 </div>
-                <Progress className="mt-2 h-3" value={88} />
+                <Progress className="mt-2 h-3" value={progressProtein} />
               </div>
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Carbohidratos</span>
-                  <span className="font-semibold">95%</span>
+                  <span className="font-semibold">{progressCarbs}%</span>
                 </div>
-                <Progress className="mt-2 h-3" value={95} />
+                <Progress className="mt-2 h-3" value={progressCarbs} />
               </div>
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Grasas</span>
-                  <span className="font-semibold">78%</span>
+                  <span className="font-semibold">{progressFats}%</span>
                 </div>
-                <Progress className="mt-2 h-3" value={78} />
+                <Progress className="mt-2 h-3" value={progressFats} />
               </div>
             </div>
           </Card>
@@ -330,10 +347,10 @@ export function UserOverviewPage() {
           </div>
           <div className="grid gap-4 p-5 md:grid-cols-4">
             {[
-              { label: "Comidas totales", value: String(userPlan.mealsPerWeek), icon: Utensils },
-              { label: "Entregas por semana", value: String(userPlan.deliveriesPerWeek), icon: Truck },
-              { label: "Calorías diarias", value: "2 100", icon: Flame },
-              { label: userPlan.deliveriesPerWeek === 1 ? "Almuerzos" : userPlan.deliveriesPerWeek === 2 ? "Almuerzos + cenas" : "Todas las comidas", value: String(userPlan.mealsPerWeek), icon: Apple },
+                { label: "Comidas totales", value: String(userPlan.mealsPerWeek), icon: Utensils },
+                { label: "Entregas por semana", value: String(userPlan.deliveriesPerWeek), icon: Truck },
+                { label: "Calorías diarias", value: dailyCalories.toLocaleString(), icon: Flame },
+                { label: userPlan.deliveriesPerWeek === 1 ? "Almuerzos" : userPlan.deliveriesPerWeek === 2 ? "Almuerzos + cenas" : "Todas las comidas", value: String(userPlan.mealsPerWeek), icon: Apple },
             ].map((stat) => {
               const Icon = stat.icon;
               return (
@@ -354,6 +371,16 @@ export function UserOverviewPage() {
 export function UserOrdersPage() {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
+  const orders = defaultOrders;
+
+  const totalPedidos = orders.length;
+  const comidasRecibidas = orders.filter((o) => o.status === "entregado").reduce((s, o) => s + o.meals, 0);
+  const totalGasto = orders.reduce((s, o) => {
+    const numeric = parseFloat(o.total.replace(/[^0-9.]/g, ""));
+    return s + (isNaN(numeric) ? 0 : numeric);
+  }, 0);
+  const semanasActivas = new Set(orders.map((o) => o.date.slice(0, 7))).size;
+
   return (
     <RoleWorkspace
       roleTitle="Mi cuenta"
@@ -363,10 +390,10 @@ export function UserOrdersPage() {
     >
       <div className="grid gap-5 md:grid-cols-4">
         {[
-          { label: "Total de pedidos", value: "5", icon: ShoppingBag, tone: "text-primary" },
-          { label: "Comidas recibidas", value: "63", icon: Utensils, tone: "text-accent" },
-          { label: "Semanas activas", value: "14", icon: Calendar, tone: "text-primary" },
-          { label: "Gasto total", value: "S/ 1,454", icon: CreditCard, tone: "text-accent" },
+          { label: "Total de pedidos", value: String(totalPedidos), icon: ShoppingBag, tone: "text-primary" },
+          { label: "Comidas recibidas", value: String(comidasRecibidas), icon: Utensils, tone: "text-accent" },
+          { label: "Semanas activas", value: String(semanasActivas), icon: Calendar, tone: "text-primary" },
+          { label: "Gasto total", value: `S/ ${totalGasto.toLocaleString()}`, icon: CreditCard, tone: "text-accent" },
         ].map((stat) => {
           const Icon = stat.icon;
           return <MetricCard key={stat.label} icon={Icon} label={stat.label} tone={stat.tone} value={stat.value} />;
@@ -468,8 +495,15 @@ export function UserProfilePage() {
   const userPlanData = PLANS.find((p) => p.id === "estandar")!;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(session?.name ?? "Juan Perez");
-  const [phone, setPhone] = useState("+51 999 888 777");
+  const email = session?.email ?? "juan.perez@email.com";
+  const [phone, setPhone] = useState("+51 999 111 222");
   const [address, setAddress] = useState("Av. Pardo 456, Dpto 301, Miraflores");
+  const fechaNacimiento = "15/03/1990";
+  const miembroDesde = "Febrero 2026";
+  const caloriasDiarias = 2100;
+  const objetivo = "Bajar grasa corporal";
+  const restricciones: string[] = ["Sin lactosa"];
+  const alergias: string[] = ["Ninguna"];
 
   function handleSave() {
     setEditing(false);
@@ -477,7 +511,7 @@ export function UserProfilePage() {
 
   function handleCancel() {
     setName(session?.name ?? "Juan Perez");
-    setPhone("+51 999 888 777");
+    setPhone("+51 999 111 222");
     setAddress("Av. Pardo 456, Dpto 301, Miraflores");
     setEditing(false);
   }
@@ -496,7 +530,7 @@ export function UserProfilePage() {
               <User className="h-10 w-10 text-primary" />
             </div>
             <h2 className="mt-4 font-display text-xl font-bold">{session?.name ?? "Juan Perez"}</h2>
-            <p className="text-sm text-muted-foreground">{session?.email ?? "juan.perez@email.com"}</p>
+            <p className="text-sm text-muted-foreground">{session?.email ?? email}</p>
             <Badge className="mt-3 bg-accent-soft text-accent hover:bg-accent-soft">Plan {userPlanData.name}</Badge>
             <div className="mt-4 flex w-full gap-2">
               {editing ? (
@@ -534,7 +568,7 @@ export function UserProfilePage() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Email</label>
-                <Input value={session?.email ?? "juan.perez@email.com"} disabled />
+                <Input value={email} disabled />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Teléfono</label>
@@ -548,12 +582,12 @@ export function UserProfilePage() {
           ) : (
             <div className="mt-5 grid gap-4 md:grid-cols-2">
               {[
-                { label: "Nombre completo", value: session?.name ?? "Juan Perez" },
-                { label: "Email", value: session?.email ?? "juan.perez@email.com" },
+                { label: "Nombre completo", value: name },
+                { label: "Email", value: email },
                 { label: "Teléfono", value: phone },
-                { label: "Fecha de nacimiento", value: "15/03/1990" },
+                { label: "Fecha de nacimiento", value: fechaNacimiento },
                 { label: "Dirección", value: address },
-                { label: "Miembro desde", value: "Febrero 2026" },
+                { label: "Miembro desde", value: miembroDesde },
               ].map((field) => (
                 <div key={field.label} className="rounded-xl border border-border bg-secondary/40 p-4">
                   <div className="text-xs uppercase text-muted-foreground">{field.label}</div>
@@ -570,28 +604,28 @@ export function UserProfilePage() {
             <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 p-4">
               <div>
                 <div className="font-medium">Objetivo</div>
-                <div className="text-sm text-muted-foreground">Bajar grasa corporal</div>
+                <div className="text-sm text-muted-foreground">{objetivo}</div>
               </div>
               <Dumbbell className="h-5 w-5 text-accent" />
             </div>
             <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 p-4">
               <div>
                 <div className="font-medium">Restricciones</div>
-                <div className="text-sm text-muted-foreground">Sin lactosa</div>
+                <div className="text-sm text-muted-foreground">{restricciones.join(", ")}</div>
               </div>
               <Heart className="h-5 w-5 text-accent" />
             </div>
             <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 p-4">
               <div>
                 <div className="font-medium">Alergias</div>
-                <div className="text-sm text-muted-foreground">Ninguna</div>
+                <div className="text-sm text-muted-foreground">{alergias.length > 0 ? alergias.join(", ") : "Ninguna"}</div>
               </div>
               <Activity className="h-5 w-5 text-accent" />
             </div>
             <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 p-4">
               <div>
                 <div className="font-medium">Calorías diarias</div>
-                <div className="text-sm text-muted-foreground">2,100 kcal</div>
+                <div className="text-sm text-muted-foreground">{caloriasDiarias.toLocaleString()} kcal</div>
               </div>
               <Flame className="h-5 w-5 text-accent" />
             </div>
@@ -638,6 +672,23 @@ export function UserProfilePage() {
 }
 
 export function UserNutritionPage() {
+  const nutritionLog = defaultNutritionLog;
+
+  const avgKcal = Math.round(nutritionLog.reduce((s, d) => s + d.kcal, 0) / (nutritionLog.length || 1));
+  const avgProtein = Math.round(nutritionLog.reduce((s, d) => s + d.protein, 0) / (nutritionLog.length || 1));
+  const avgCarbs = Math.round(nutritionLog.reduce((s, d) => s + d.carbs, 0) / (nutritionLog.length || 1));
+  const avgFats = Math.round(nutritionLog.reduce((s, d) => s + d.fats, 0) / (nutritionLog.length || 1));
+
+  const proteinPct = 27;
+  const carbsPct = 40;
+  const fatsPct = 30;
+  const fiberPct = 3;
+
+  const weekWithinGoal = true;
+  const fiveDaysNoFatExceed = true;
+  const proteinsOnTarget = true;
+  const sevenDaysLogged = true;
+
   return (
     <RoleWorkspace
       roleTitle="Mi cuenta"
@@ -647,10 +698,10 @@ export function UserNutritionPage() {
     >
       <div className="grid gap-5 md:grid-cols-4">
         {[
-          { label: "Promedio semanal", value: "2 063", icon: Flame, tone: "text-primary", description: "kcal / dia" },
-          { label: "Proteínas", value: "136g", icon: Dumbbell, tone: "text-accent", description: "promedio diario" },
-          { label: "Carbohidratos", value: "208g", icon: Apple, tone: "text-primary", description: "promedio diario" },
-          { label: "Grasas", value: "67g", icon: TrendingUp, tone: "text-accent", description: "promedio diario" },
+          { label: "Promedio semanal", value: avgKcal.toLocaleString(), icon: Flame, tone: "text-primary", description: "kcal / dia" },
+          { label: "Proteínas", value: `${avgProtein}g`, icon: Dumbbell, tone: "text-accent", description: "promedio diario" },
+          { label: "Carbohidratos", value: `${avgCarbs}g`, icon: Apple, tone: "text-primary", description: "promedio diario" },
+          { label: "Grasas", value: `${avgFats}g`, icon: TrendingUp, tone: "text-accent", description: "promedio diario" },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
@@ -740,37 +791,37 @@ export function UserNutritionPage() {
             <div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Proteínas</span>
-                <span className="font-semibold">140g (27%)</span>
+                <span className="font-semibold">140g ({proteinPct}%)</span>
               </div>
               <div className="mt-2 h-2 w-full rounded-full bg-secondary">
-                <div className="h-2 rounded-full bg-primary" style={{ width: "27%" }} />
+                <div className="h-2 rounded-full bg-primary" style={{ width: `${proteinPct}%` }} />
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Carbohidratos</span>
-                <span className="font-semibold">210g (40%)</span>
+                <span className="font-semibold">210g ({carbsPct}%)</span>
               </div>
               <div className="mt-2 h-2 w-full rounded-full bg-secondary">
-                <div className="h-2 rounded-full bg-accent" style={{ width: "40%" }} />
+                <div className="h-2 rounded-full bg-accent" style={{ width: `${carbsPct}%` }} />
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Grasas</span>
-                <span className="font-semibold">70g (30%)</span>
+                <span className="font-semibold">70g ({fatsPct}%)</span>
               </div>
               <div className="mt-2 h-2 w-full rounded-full bg-secondary">
-                <div className="h-2 rounded-full bg-warning" style={{ width: "30%" }} />
+                <div className="h-2 rounded-full bg-warning" style={{ width: `${fatsPct}%` }} />
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Fibra</span>
-                <span className="font-semibold">30g (3%)</span>
+                <span className="font-semibold">30g ({Math.max(fiberPct, 1)}%)</span>
               </div>
               <div className="mt-2 h-2 w-full rounded-full bg-secondary">
-                <div className="h-2 rounded-full bg-success" style={{ width: "3%" }} />
+                <div className="h-2 rounded-full bg-success" style={{ width: `${Math.max(fiberPct, 1)}%` }} />
               </div>
             </div>
           </div>
@@ -780,10 +831,10 @@ export function UserNutritionPage() {
           <h3 className="font-display text-lg font-bold">Logros</h3>
           <div className="mt-5 space-y-3">
             {[
-              { label: "Semana completa dentro del objetivo", achieved: true },
-              { label: "5 días seguidos sin exceder grasas", achieved: true },
-              { label: "Proteínas diarias cumplidas", achieved: true },
-              { label: "Racha de 7 días de registro", achieved: false },
+              { label: "Semana completa dentro del objetivo", achieved: weekWithinGoal },
+              { label: "5 días seguidos sin exceder grasas", achieved: fiveDaysNoFatExceed },
+              { label: "Proteínas diarias cumplidas", achieved: proteinsOnTarget },
+              { label: "Racha de 7 días de registro", achieved: sevenDaysLogged },
             ].map((achievement) => (
               <div
                 key={achievement.label}
