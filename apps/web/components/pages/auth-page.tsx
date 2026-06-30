@@ -24,63 +24,56 @@ export default function AuthPage() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [error, setError] = useState("");
-  const { isHydrated, session, signIn, signUp } = useAuth();
+  const { status, session, signIn, signUp } = useAuth();
 
   useEffect(() => {
-    if (!isHydrated || !session) {
+    if (status !== "authenticated" || !session) {
       return;
     }
 
-    router.replace(getRoleHomePath(session.role));
-  }, [isHydrated, router, session]);
-
-  function resolveRedirectPath(defaultPath: string) {
+    const defaultPath = getRoleHomePath(session.role);
     const nextPath = searchParams.get("next");
 
-    if (!nextPath || !nextPath.startsWith("/")) {
-      return defaultPath;
+    if (nextPath && nextPath.startsWith("/")) {
+      if (defaultPath === "/admin" && nextPath.startsWith("/admin")) {
+        router.replace(nextPath);
+        return;
+      }
+
+      if (defaultPath === "/cocina" && nextPath.startsWith("/cocina")) {
+        router.replace(nextPath);
+        return;
+      }
+
+      if (defaultPath === "/dashboard" && nextPath.startsWith("/dashboard")) {
+        router.replace(nextPath);
+        return;
+      }
     }
 
-    if (defaultPath === "/admin" && nextPath.startsWith("/admin")) {
-      return nextPath;
-    }
-
-    if (defaultPath === "/cocina" && nextPath.startsWith("/cocina")) {
-      return nextPath;
-    }
-
-    if (defaultPath === "/dashboard" && nextPath.startsWith("/dashboard")) {
-      return nextPath;
-    }
-
-    return defaultPath;
-  }
+    router.replace(defaultPath);
+  }, [status, router, session, searchParams]);
 
   function handleLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError("");
 
     const result = signIn(loginEmail, loginPassword);
 
     if (!result.ok) {
       setError(result.error);
-      return;
     }
-
-    setError("");
-    router.push(resolveRedirectPath(result.redirectTo));
   }
 
   function handleSignupSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    if (!signupName.trim() || !signupEmail.trim() || !signupPassword.trim()) {
-      setError("Completa nombre, correo y contraseña para crear tu cuenta.");
-      return;
-    }
-
-    const result = signUp({ name: signupName, email: signupEmail });
     setError("");
-    router.push(result.redirectTo);
+
+    const result = signUp(signupName, signupEmail, signupPassword);
+
+    if (!result.ok) {
+      setError(result.error);
+    }
   }
 
   return (
@@ -154,7 +147,10 @@ export default function AuthPage() {
                   onChange={(event) => setLoginPassword(event.target.value)}
                 />
               </div>
-              <button className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")} type="submit">
+              <button
+                className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")}
+                type="submit"
+              >
                 Ingresar
               </button>
               <Link
@@ -170,7 +166,12 @@ export default function AuthPage() {
                 <label htmlFor="signup-name" className="text-sm font-medium">
                   Nombre
                 </label>
-                <Input id="signup-name" placeholder="Tu nombre completo" value={signupName} onChange={(event) => setSignupName(event.target.value)} />
+                <Input
+                  id="signup-name"
+                  placeholder="Tu nombre completo"
+                  value={signupName}
+                  onChange={(event) => setSignupName(event.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <label htmlFor="signup-email" className="text-sm font-medium">
@@ -196,7 +197,10 @@ export default function AuthPage() {
                   onChange={(event) => setSignupPassword(event.target.value)}
                 />
               </div>
-              <button className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")} type="submit">
+              <button
+                className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")}
+                type="submit"
+              >
                 Crear cuenta
               </button>
             </form>

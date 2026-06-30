@@ -1,109 +1,127 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-import { AUTH_STORAGE_KEY, getNameFromEmail, getRoleHomePath, inferRoleFromEmail, type AuthSession } from "@/lib/auth";
+import {
+  AUTH_STORAGE_KEY,
+  getInitials,
+  getRoleHomePath,
+  getRoleLabel,
+  inferRoleFromEmail,
+  getNameFromEmail,
+  type AuthRole,
+  type AuthSession,
+} from "@/lib/auth";
+
+export type { AuthRole, AuthSession };
+export { getInitials, getRoleHomePath, getRoleLabel };
+
+type AuthStatus = "idle" | "loading" | "authenticated" | "unauthenticated";
 
 type SignInResult =
-  | { ok: true; redirectTo: string }
+  | { ok: true }
   | { ok: false; error: string };
 
-type SignUpInput = {
-  name: string;
-  email: string;
-};
-
 type AuthContextValue = {
-  isHydrated: boolean;
+  status: AuthStatus;
   session: AuthSession | null;
+  isHydrated: boolean;
   signIn: (email: string, password: string) => SignInResult;
+  signUp: (name: string, email: string, password: string) => SignInResult;
   signOut: () => void;
-  signUp: (input: SignUpInput) => { redirectTo: string };
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function persistSession(session: AuthSession | null) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  if (session) {
-    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-    return;
-  }
-
-  window.localStorage.removeItem(AUTH_STORAGE_KEY);
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<AuthSession | null>(null);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [status, setStatus] = useState<AuthStatus>("idle");
 
   useEffect(() => {
-    let nextSession: AuthSession | null = null;
+    const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
 
-    try {
-      const rawSession = window.localStorage.getItem(AUTH_STORAGE_KEY);
-
-      if (rawSession) {
-        nextSession = JSON.parse(rawSession) as AuthSession;
-      }
-    } catch {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    if (!raw) {
+      setStatus("unauthenticated");
+      return;
     }
 
-    const frame = window.requestAnimationFrame(() => {
+    try {
+      const parsed = JSON.parse(raw) as AuthSession;
+      setSession(parsed);
+      setStatus("authenticated");
+    } catch {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      setStatus("unauthenticated");
+    }
+  }, []);
+
+  const signIn = useCallback(
+    (email: string, password: string): SignInResult => {
+      const trimmedEmail = email.trim().toLowerCase();
+
+      if (!trimmedEmail || !password.trim()) {
+        return { ok: false, error: "Ingresa tu correo y contraseña para continuar." };
+      }
+
+      const role = inferRoleFromEmail(trimmedEmail);
+
+      const nextSession: AuthSession = {
+        name: getNameFromEmail(trimmedEmail, role),
+        email: trimmedEmail,
+        role,
+      };
+
+      window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextSession));
       setSession(nextSession);
-      setIsHydrated(true);
+      setStatus("authenticated");
 
-    });
+      return { ok: true };
+    },
+    [],
+  );
 
-    return () => window.cancelAnimationFrame(frame);
+  const signUp = useCallback(
+    (name: string, email: string, password: string): SignInResult => {
+      const trimmedEmail = email.trim().toLowerCase();
+      const trimmedName = name.trim();
+
+      if (!trimmedName || !trimmedEmail || !password.trim()) {
+        return { ok: false, error: "Completa nombre, correo y contraseña para crear tu cuenta." };
+      }
+
+      const role = inferRoleFromEmail(trimmedEmail);
+
+      const nextSession: AuthSession = {
+        name: trimmedName || getNameFromEmail(trimmedEmail, role),
+        email: trimmedEmail,
+        role,
+      };
+
+      window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextSession));
+      setSession(nextSession);
+      setStatus("authenticated");
+
+      return { ok: true };
+    },
+    [],
+  );
+
+  const signOut = useCallback(() => {
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    setSession(null);
+    setStatus("unauthenticated");
   }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      isHydrated,
+      status,
       session,
-      signIn: (email, password) => {
-        const normalizedEmail = email.trim().toLowerCase();
-
-        if (!normalizedEmail || !password.trim()) {
-          return { ok: false, error: "Ingresa tu correo y contraseña para continuar." };
-        }
-
-        const role = inferRoleFromEmail(normalizedEmail);
-
-        const nextSession: AuthSession = {
-          name: getNameFromEmail(normalizedEmail, role),
-          email: normalizedEmail,
-          role,
-        };
-
-        setSession(nextSession);
-        persistSession(nextSession);
-
-        return { ok: true, redirectTo: getRoleHomePath(role) };
-      },
-      signOut: () => {
-        setSession(null);
-        persistSession(null);
-      },
-      signUp: ({ name, email }) => {
-        const nextSession: AuthSession = {
-          name: name.trim() || "Nuevo usuario",
-          email: email.trim().toLowerCase(),
-          role: "customer",
-        };
-
-        setSession(nextSession);
-        persistSession(nextSession);
-
-        return { redirectTo: getRoleHomePath("customer") };
-      },
+      isHydrated: status !== "idle",
+      signIn,
+      signUp,
+      signOut,
     }),
-    [isHydrated, session],
+    [status, session, signIn, signUp, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

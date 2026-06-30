@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Lock, Mail, Send } from "lucide-react";
 
 import { SiteHeader } from "@/components/layout/site-header";
@@ -35,17 +35,13 @@ export default function RecuperarPage() {
 
     setError("");
     setStep("enviado");
-  }
-
-  useEffect(() => {
-    if (step !== "enviado") return;
 
     const timer = setTimeout(() => {
       setStep("restablecer");
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [step]);
+  }
 
   function handleResetPassword(e: React.FormEvent) {
     e.preventDefault();
@@ -153,7 +149,10 @@ export default function RecuperarPage() {
                   />
                 </div>
               </div>
-              <button className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")} type="submit">
+              <button
+                className={cn(buttonVariants({ variant: "hero", size: "lg" }), "w-full")}
+                type="submit"
+              >
                 <Send className="h-4 w-4" /> Enviar enlace de recuperación
               </button>
             </form>
